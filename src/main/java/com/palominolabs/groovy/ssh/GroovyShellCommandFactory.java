@@ -6,11 +6,11 @@ import org.apache.sshd.server.Command;
 
 import java.util.concurrent.Executor;
 
-final class GroovyShellCommandFactory implements Factory<Command> {
+public final class GroovyShellCommandFactory implements Factory<Command> {
     private final Binding binding;
     private final Executor executor;
 
-    GroovyShellCommandFactory(Binding binding, Executor executor) {
+    public GroovyShellCommandFactory(Binding binding, Executor executor) {
         this.binding = binding;
         this.executor = executor;
     }
