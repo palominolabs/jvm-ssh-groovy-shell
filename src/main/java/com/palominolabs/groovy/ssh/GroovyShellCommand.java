@@ -19,6 +19,7 @@ final class GroovyShellCommand implements Runnable, Command {
     private InputStream inputStream;
     private OutputStream outputStream;
     private OutputStream errorStream;
+    private ExitCallback exitCallback;
 
     GroovyShellCommand(Binding binding, Executor executor) {
 
@@ -43,7 +44,7 @@ final class GroovyShellCommand implements Runnable, Command {
 
     @Override
     public void setExitCallback(ExitCallback callback) {
-        // TODO
+        exitCallback = callback;
     }
 
     @Override
@@ -59,6 +60,6 @@ final class GroovyShellCommand implements Runnable, Command {
     @Override
     public void run() {
         IO io = new IO(inputStream, outputStream, errorStream);
-        new Groovysh(binding, io).run();
+        exitCallback.onExit(new Groovysh(binding, io).run());
     }
 }
