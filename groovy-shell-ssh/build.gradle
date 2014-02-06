@@ -1,0 +1,94 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+apply plugin: 'cobertura'
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+dependencies {
+  compile 'org.codehaus.groovy:groovy-all:2.2.1'
+
+  compile('org.apache.sshd:apache-sshd:0.9.0') {
+    exclude group: 'org.slf4j', module: 'slf4j-simple'
+  }
+  runtime 'org.fusesource.jansi:jansi:1.11'
+  runtime 'jline:jline:2.11'
+
+  compile 'com.google.code.findbugs:jsr305:2.0.2'
+}
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.2'
+    classpath "net.saliman:gradle-cobertura-plugin:2.2.1"
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  from sourceSets.main.allJava
+  classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  from javadoc.destinationDir
+  classifier = 'javadoc'
+}
+
+artifacts {
+  // register in 'archives' config so they will be signed
+  archives sourcesJar
+  archives javadocJar
+}
+
+signing {
+  required { gradle.taskGraph.hasTask("uploadArchives") }
+  sign configurations.archives
+}
+
+// Set sonatypeUsername and sonatypePassword in your ~/.gradle/gradle.properties to be able to use this.
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { deployment -> signing.signPom(deployment) }
+
+      repository(url: isReleaseVersion ?
+          "https://oss.sonatype.org/service/local/staging/deploy/maven2/" :
+          "https://oss.sonatype.org/content/repositories/snapshots/") {
+        def u = project.hasProperty('sonatypeUsername') ? sonatypeUsername : 'FIXME'
+        def p = project.hasProperty('sonatypePassword') ? sonatypePassword : 'FIXME'
+        authentication(userName: u, password: p)
+      }
+
+      pom.project {
+        name rootProject.name
+        packaging 'jar'
+        description 'Embed a groovy shell accessible over SSH.'
+        url "https://github.com/palominolabs/${rootProject.name}"
+
+        scm {
+          url "scm:git@github.com:palominolabs/${rootProject.name}.git"
+          connection "scm:git@github.com:palominolabs/${rootProject.name}.git"
+          developerConnection "scm:git@github.com:palominolabs/${rootProject.name}.git"
+        }
+
+        licenses {
+          license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+          }
+        }
+
+        developers {
+          developer {
+            id 'marshallpierce'
+            name 'Marshall Pierce'
+          }
+        }
+      }
+    }
+  }
+}

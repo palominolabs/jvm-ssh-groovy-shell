@@ -1,1 +1,3 @@
-rootProject.name = 'groovy-shell-ssh'
+rootProject.name = 'parent'
+
+include 'groovy-shell-ssh', 'demo-app'

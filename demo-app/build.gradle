@@ -1,0 +1,22 @@
+apply plugin: 'application'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+mainClassName = 'com.palominolabs.groovy.ssh.demo.DemoMain'
+
+ext {
+  depVersions = [
+      slf4j: '1.7.6',
+  ]
+}
+
+dependencies {
+  compile 'com.palominolabs.http:jetty-http-server-wrapper:1.0.1'
+
+  runtime "org.slf4j:slf4j-simple:$depVersions.slf4j"
+  runtime "org.slf4j:log4j-over-slf4j:$depVersions.slf4j"
+  runtime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
+  testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
+  
+  compile project(':groovy-shell-ssh')
+}
