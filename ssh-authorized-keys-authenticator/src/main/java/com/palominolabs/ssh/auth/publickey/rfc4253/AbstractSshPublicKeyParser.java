@@ -2,8 +2,8 @@ package com.palominolabs.ssh.auth.publickey.rfc4253;
 
 import java.math.BigInteger;
 
-class AbstractSshPublicKeyParser {
-    protected final byte[] bytes;
+abstract class AbstractSshPublicKeyParser {
+    private final byte[] bytes;
     private int pos;
 
     AbstractSshPublicKeyParser(byte[] bytes) {
