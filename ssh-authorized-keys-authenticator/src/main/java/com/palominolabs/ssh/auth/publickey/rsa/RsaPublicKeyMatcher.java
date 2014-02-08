@@ -5,6 +5,7 @@ import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.security.MessageDigest;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Objects;
@@ -28,9 +29,11 @@ class RsaPublicKeyMatcher implements PublicKeyMatcher {
 
         RSAPublicKey other = (RSAPublicKey) key;
 
-        // TODO avoid timing side channel attack
-        return Objects.equals(authorizedKey.getPublicExponent(), other.getPublicExponent())
-            && Objects.equals(authorizedKey.getModulus(), other.getModulus())
+        // this does require allocation to get the byte arrays, but it allows us to use the timing-attack-resistant
+        // comparison from MessageDigest
+        return MessageDigest
+            .isEqual(authorizedKey.getPublicExponent().toByteArray(), other.getPublicExponent().toByteArray())
+            && MessageDigest.isEqual(authorizedKey.getModulus().toByteArray(), other.getModulus().toByteArray())
             && Objects.equals(authorizedKey.getAlgorithm(), other.getAlgorithm());
     }
 
