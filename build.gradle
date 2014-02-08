@@ -1,5 +1,6 @@
 subprojects {
   apply plugin: 'java'
+  apply plugin: 'cobertura'
 
   group = 'com.palominolabs.groovy'
   version = '1.0.0-SNAPSHOT'
@@ -15,6 +16,14 @@ subprojects {
   }
 }
 
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "net.saliman:gradle-cobertura-plugin:2.2.3"
+  }
+}
 
 task wrapper(type: Wrapper) {
   gradleVersion = '1.10'
