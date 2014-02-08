@@ -49,11 +49,11 @@ public final class AuthorizedKeysPublickeyAuthenticator implements PublickeyAuth
             return false;
         }
 
-        Iterator<PublicKeyMatcher> matchingAuthenticators =
-            Iterables.filter(authenticators, new AuthenticatorPredicate(key)).iterator();
+        Iterator<PublicKeyMatcher> matchers =
+            Iterables.filter(authenticators, new MatcherMatchPredicate(key)).iterator();
 
-        if (matchingAuthenticators.hasNext()) {
-            logger.info("Matched key with comment " + matchingAuthenticators.next().getComment());
+        if (matchers.hasNext()) {
+            logger.info("Matched key with comment " + matchers.next().getComment());
             return true;
         }
 
@@ -72,16 +72,16 @@ public final class AuthorizedKeysPublickeyAuthenticator implements PublickeyAuth
         try {
             return parser.parse(inputStream);
         } catch (IOException e) {
-            logger.warn("Could not parse authorized keys", e);
+            logger.warn("Could not read authorized keys", e);
             return null;
         }
     }
 
-    static class AuthenticatorPredicate implements Predicate<PublicKeyMatcher> {
+    static class MatcherMatchPredicate implements Predicate<PublicKeyMatcher> {
 
         private final PublicKey candidateKey;
 
-        AuthenticatorPredicate(PublicKey candidateKey) {
+        MatcherMatchPredicate(PublicKey candidateKey) {
             this.candidateKey = candidateKey;
         }
 

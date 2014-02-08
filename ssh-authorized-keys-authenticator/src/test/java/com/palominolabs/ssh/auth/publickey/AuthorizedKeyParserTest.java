@@ -5,10 +5,8 @@ import com.google.common.io.BaseEncoding;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.security.PublicKey;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -21,7 +19,8 @@ public final class AuthorizedKeyParserTest {
 
     @Before
     public void setUp() {
-        authorizedKeyParser = new AuthorizedKeyParser(Lists.<PublicKeyLoader>newArrayList(new DummyLoader()));
+        authorizedKeyParser =
+            new AuthorizedKeyParser(Lists.<PublicKeyLoader>newArrayList(new FakePublicKeyLoader(false)));
     }
 
     @Test
@@ -75,45 +74,8 @@ public final class AuthorizedKeyParserTest {
 
     private void assertKey(PublicKeyMatcher k0, String data, String comment) {
         BaseEncoding b64 = BaseEncoding.base64();
-        assertArrayEquals(b64.decode(data), ((DummyMatcher) k0).data);
+        assertArrayEquals(b64.decode(data), ((FakePublicKeyMatcher) k0).getData());
 
         assertEquals(comment, k0.getComment());
-    }
-
-    private static class DummyLoader implements PublicKeyLoader {
-
-        @Nonnull
-        @Override
-        public String getKeyType() {
-            return "dummy";
-        }
-
-        @Nonnull
-        @Override
-        public PublicKeyMatcher buildMatcher(byte[] data, String comment) {
-            return new DummyMatcher(data, comment);
-        }
-    }
-
-    private static class DummyMatcher implements PublicKeyMatcher {
-
-        private final byte[] data;
-        private final String comment;
-
-        private DummyMatcher(byte[] data, String comment) {
-            this.data = data;
-            this.comment = comment;
-        }
-
-        @Override
-        public boolean isMatch(@Nonnull PublicKey key) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Nonnull
-        @Override
-        public String getComment() {
-            return comment;
-        }
     }
 }

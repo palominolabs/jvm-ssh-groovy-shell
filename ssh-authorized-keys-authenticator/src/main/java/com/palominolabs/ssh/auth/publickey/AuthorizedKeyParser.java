@@ -48,13 +48,15 @@ final class AuthorizedKeyParser {
         try (Scanner scanner = new Scanner(keyData, StandardCharsets.UTF_8.name())) {
             int lineNum = 0;
             while (scanner.hasNextLine()) {
+                if (scanner.ioException() != null) {
+                    throw scanner.ioException();
+                }
+
                 lineNum++;
                 String line = scanner.nextLine();
 
-                IOException e = scanner.ioException();
-                if (e != null) {
-                    logger.warn("Read failed", e);
-                    throw e;
+                if (scanner.ioException() != null) {
+                    throw scanner.ioException();
                 }
 
                 if (line.charAt(0) == '#') {
@@ -81,6 +83,10 @@ final class AuthorizedKeyParser {
                 String comment = matcher.group(3);
 
                 keys.add(loader.buildMatcher(BaseEncoding.base64().decode(keyBase64), comment));
+            }
+
+            if (scanner.ioException() != null) {
+                throw scanner.ioException();
             }
         }
 

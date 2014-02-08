@@ -10,6 +10,8 @@ dependencies {
 
   testCompile 'junit:junit:4.11'
 
+  testCompile 'org.easymock:easymock:3.2'
+
   testRuntime "org.slf4j:slf4j-simple:$depVersions.slf4j"
   testRuntime "org.slf4j:log4j-over-slf4j:$depVersions.slf4j"
   testRuntime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
