@@ -92,7 +92,7 @@ public final class RsaPublicKeyMatcherTest {
     }
 
     private RsaPublicKeyMatcher getMatcher(String resourceName) throws IOException {
-        return SshRsaPublicKeyLoaderTest.getRsaMatcher(Resources.getResource(getClass(), resourceName));
+        return RsaPublicKeyLoaderTest.getRsaMatcher(Resources.getResource(getClass(), resourceName));
     }
 
     static class StubRsaPublicKey implements RSAPublicKey {
