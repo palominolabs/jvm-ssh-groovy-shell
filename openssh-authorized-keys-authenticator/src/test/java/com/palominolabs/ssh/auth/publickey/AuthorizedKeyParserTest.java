@@ -61,6 +61,18 @@ public final class AuthorizedKeyParserTest {
         assertKey(keys.get(0), "bbb", "comment2");
     }
 
+    @Test
+    public void testSkipsUnknownTypeLines() throws IOException {
+        ByteArrayInputStream is =
+            new ByteArrayInputStream("dummy2 aaa comment1\ndummy bbb comment2".getBytes(UTF_8));
+
+        List<PublicKeyMatcher> keys = authorizedKeyParser.parse(is);
+
+        assertEquals(1, keys.size());
+
+        assertKey(keys.get(0), "bbb", "comment2");
+    }
+
     private void assertKey(PublicKeyMatcher k0, String data, String comment) {
         BaseEncoding b64 = BaseEncoding.base64();
         assertArrayEquals(b64.decode(data), ((DummyMatcher) k0).data);
