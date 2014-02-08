@@ -1,7 +1,7 @@
 package com.palominolabs.ssh.auth.publickey.rsa;
 
-import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
+import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.rfc4253.SshRsaPublicKeyParser;
 
 import javax.annotation.Nonnull;

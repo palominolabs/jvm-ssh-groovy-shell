@@ -17,7 +17,8 @@ import static org.junit.Assert.assertEquals;
 public final class SshRsaPublicKeyParserTest {
     @Test
     public void testParseValidKey() throws IOException, InvalidKeySpecException {
-        String[] chunks = Resources.toString(getResource(RsaPublicKeyMatcherFactoryTest.class, "rsa1.pub"), UTF_8).split(" ");
+        String[] chunks =
+            Resources.toString(getResource(RsaPublicKeyMatcherFactoryTest.class, "rsa1.pub"), UTF_8).split(" ");
         byte[] bytes = BaseEncoding.base64().decode(chunks[1]);
 
         RSAPublicKey key = new SshRsaPublicKeyParser(bytes).getKey();
