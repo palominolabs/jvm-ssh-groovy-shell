@@ -11,6 +11,7 @@ import javax.annotation.concurrent.Immutable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -43,7 +44,7 @@ final class AuthorizedKeyParser {
     @Nonnull
     Iterable<PublicKeyMatcher> parse(@Nonnull InputStream keyData) throws IOException {
 
-        List<PublicKeyMatcher> keys = new ArrayList<>();
+        List<PublicKeyMatcher> matchers = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(keyData, StandardCharsets.UTF_8.name())) {
             int lineNum = 0;
@@ -82,7 +83,11 @@ final class AuthorizedKeyParser {
                 String keyBase64 = matcher.group(2);
                 String comment = matcher.group(3);
 
-                keys.add(loader.buildMatcher(BaseEncoding.base64().decode(keyBase64), comment));
+                try {
+                    matchers.add(loader.buildMatcher(BaseEncoding.base64().decode(keyBase64), comment));
+                } catch (InvalidKeySpecException e) {
+                    logger.warn("Could not parse key data", e);
+                }
             }
 
             if (scanner.ioException() != null) {
@@ -90,7 +95,7 @@ final class AuthorizedKeyParser {
             }
         }
 
-        return keys;
+        return matchers;
     }
 
     private static class KeyTypePredicate implements Predicate<PublicKeyLoader> {

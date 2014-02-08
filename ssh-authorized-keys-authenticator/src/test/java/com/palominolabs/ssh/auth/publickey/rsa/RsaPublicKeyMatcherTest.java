@@ -9,13 +9,14 @@ import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public final class RsaPublicKeyMatcherTest {
     @Test
-    public void testSameKeyMatches() throws IOException, InvalidKeyException {
+    public void testSameKeyMatches() throws IOException, InvalidKeyException, InvalidKeySpecException {
         RsaPublicKeyMatcher matcher = getMatcher("rsa1.pub");
 
         RSAPublicKey key = matcher.getKey();
@@ -26,7 +27,7 @@ public final class RsaPublicKeyMatcherTest {
     }
 
     @Test
-    public void testDifferentKeyDoesntMatch() throws IOException {
+    public void testDifferentKeyDoesntMatch() throws IOException, InvalidKeySpecException {
         PublicKeyMatcher matcher1 = getMatcher("rsa1.pub");
 
         RsaPublicKeyMatcher matcher2 = getMatcher("rsa2.pub");
@@ -35,7 +36,7 @@ public final class RsaPublicKeyMatcherTest {
     }
 
     @Test
-    public void testRejectsNonRsaKey() throws IOException, InvalidKeyException {
+    public void testRejectsNonRsaKey() throws IOException, InvalidKeyException, InvalidKeySpecException {
         RsaPublicKeyMatcher matcher = getMatcher("rsa1.pub");
 
         assertFalse(matcher.isMatch(new PublicKey() {
@@ -57,7 +58,7 @@ public final class RsaPublicKeyMatcherTest {
     }
 
     @Test
-    public void testRejectsWrongModulus() throws InvalidKeyException, IOException {
+    public void testRejectsWrongModulus() throws InvalidKeyException, IOException, InvalidKeySpecException {
         RsaPublicKeyMatcher matcher = getMatcher("rsa1.pub");
 
         RSAPublicKey key = matcher.getKey();
@@ -69,7 +70,7 @@ public final class RsaPublicKeyMatcherTest {
     }
 
     @Test
-    public void testRejectsWrongPublicExponent() throws InvalidKeyException, IOException {
+    public void testRejectsWrongPublicExponent() throws InvalidKeyException, IOException, InvalidKeySpecException {
         RsaPublicKeyMatcher matcher = getMatcher("rsa1.pub");
 
         RSAPublicKey key = matcher.getKey();
@@ -81,7 +82,7 @@ public final class RsaPublicKeyMatcherTest {
     }
 
     @Test
-    public void testRejectsWrongAlgorithm() throws IOException {
+    public void testRejectsWrongAlgorithm() throws IOException, InvalidKeySpecException {
         final RsaPublicKeyMatcher matcher = getMatcher("rsa1.pub");
 
         RSAPublicKey key = matcher.getKey();
@@ -91,7 +92,7 @@ public final class RsaPublicKeyMatcherTest {
                     key.getFormat(), key.getEncoded())));
     }
 
-    private RsaPublicKeyMatcher getMatcher(String resourceName) throws IOException {
+    private RsaPublicKeyMatcher getMatcher(String resourceName) throws IOException, InvalidKeySpecException {
         return RsaPublicKeyLoaderTest.getRsaMatcher(Resources.getResource(getClass(), resourceName));
     }
 

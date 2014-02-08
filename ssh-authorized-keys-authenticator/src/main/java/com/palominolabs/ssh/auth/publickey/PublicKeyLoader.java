@@ -2,6 +2,7 @@ package com.palominolabs.ssh.auth.publickey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * Loads data from an authorized_keys entry.
@@ -22,7 +23,8 @@ public interface PublicKeyLoader {
      * @param data    PEM encoded key data
      * @param comment comment for the authorized key entry
      * @return a key matcher
+     * @throws InvalidKeySpecException if the key data is invalid
      */
     @Nonnull
-    PublicKeyMatcher buildMatcher(byte[] data, String comment);
+    PublicKeyMatcher buildMatcher(byte[] data, String comment) throws InvalidKeySpecException;
 }
