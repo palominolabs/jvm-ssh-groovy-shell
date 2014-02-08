@@ -2,9 +2,8 @@ package com.palominolabs.ssh.auth;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
-import com.palominolabs.ssh.auth.publickey.PublicKeyHandler;
+import com.palominolabs.ssh.auth.publickey.PublicKeyParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +29,9 @@ final class AuthorizedKeyParser {
 
     private static final Pattern KEY_PATTERN = Pattern.compile("^([-a-z\\d]+) ([a-zA-Z0-9/+=]+) ([^ ]+)$");
 
-    private final ImmutableList<PublicKeyHandler> handlers;
+    private final List<PublicKeyParser> handlers;
 
-    AuthorizedKeyParser(ImmutableList<PublicKeyHandler> handlers) {
+    AuthorizedKeyParser(List<PublicKeyParser> handlers) {
         this.handlers = handlers;
     }
 
@@ -59,23 +58,23 @@ final class AuthorizedKeyParser {
                     continue;
                 }
 
-                String type = matcher.group(1);
+                final String type = matcher.group(1);
 
-                PublicKeyHandler handler = getOnlyElement(
-                    Collections2.filter(handlers, new Predicate<PublicKeyHandler>() {
+                PublicKeyParser parser = getOnlyElement(
+                    Collections2.filter(handlers, new Predicate<PublicKeyParser>() {
                         @Override
-                        public boolean apply(@Nullable PublicKeyHandler input) {
+                        public boolean apply(@Nullable PublicKeyParser input) {
                             return input.getKeyType().equals(type);
                         }
                     }), null);
 
-                if (handler == null) {
+                if (parser == null) {
                     logger.warn("Line " + lineNum + ": Invalid key type: <" + type + ">");
                     continue;
                 }
 
                 String keyBase64 = matcher.group(2);
-                PublicKey key = handler.getParser().parse(BaseEncoding.base64().decode(keyBase64));
+                PublicKey key = parser.parse(BaseEncoding.base64().decode(keyBase64));
 
                 String comment = matcher.group(3);
 

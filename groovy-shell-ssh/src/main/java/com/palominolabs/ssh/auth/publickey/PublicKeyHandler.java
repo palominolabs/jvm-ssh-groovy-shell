@@ -11,13 +11,12 @@ import java.security.PublicKey;
 public interface PublicKeyHandler {
 
     /**
-     * This type is used to match the incoming key type from the SSH authentication attempt as well as loading keys from
-     * an authorized_keys file.
+     * Used to match against {@link PublicKey#getAlgorithm()}
      *
-     * @return the key type that this factory can handle (e.g. "ssh-rsa").
+     * @return a JCA crypto algorithm name
      */
     @Nonnull
-    String getKeyType();
+    String getJavaAlgorithmName();
 
     /**
      * @return the PublicKey subclass that this factory can generate via its parser

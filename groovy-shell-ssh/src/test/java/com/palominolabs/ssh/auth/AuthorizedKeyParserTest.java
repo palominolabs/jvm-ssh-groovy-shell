@@ -1,9 +1,7 @@
 package com.palominolabs.ssh.auth;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
-import com.palominolabs.ssh.auth.publickey.KeyMatcher;
-import com.palominolabs.ssh.auth.publickey.PublicKeyHandler;
 import com.palominolabs.ssh.auth.publickey.PublicKeyParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,9 +22,7 @@ public final class AuthorizedKeyParserTest {
 
     @Before
     public void setUp() {
-        ImmutableList<PublicKeyHandler> handlers =
-            new ImmutableList.Builder<PublicKeyHandler>().add(new DummyHandler()).build();
-        authorizedKeyParser = new AuthorizedKeyParser(handlers);
+        authorizedKeyParser = new AuthorizedKeyParser(Lists.<PublicKeyParser>newArrayList(new DummyParser()));
     }
 
     @Test
@@ -44,13 +40,13 @@ public final class AuthorizedKeyParserTest {
 
     private void assertKey(AuthorizedKey k0, String data, String comment) {
         BaseEncoding b64 = BaseEncoding.base64();
-        assertArrayEquals(b64.decode(data), ((CapturingPublicKey) k0.getPublicKey()).data);
+        assertArrayEquals(b64.decode(data), ((DummyPublicKey) k0.getPublicKey()).data);
 
         assertEquals(comment, k0.getComment());
         assertEquals("dummy", k0.getKeyType());
     }
 
-    private static class DummyHandler implements PublicKeyHandler, PublicKeyParser {
+    private static class DummyParser implements PublicKeyParser {
 
         @Nonnull
         @Override
@@ -58,35 +54,17 @@ public final class AuthorizedKeyParserTest {
             return "dummy";
         }
 
-        @Nonnull
-        @Override
-        public Class<? extends PublicKey> getKeyClass() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Nonnull
-        @Override
-        public PublicKeyParser getParser() {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public KeyMatcher getKeyMatcher() {
-            throw new UnsupportedOperationException();
-        }
-
         @Override
         public PublicKey parse(byte[] data) {
-            return new CapturingPublicKey(data);
+            return new DummyPublicKey(data);
         }
     }
 
-    private static class CapturingPublicKey implements PublicKey {
+    private static class DummyPublicKey implements PublicKey {
 
         private final byte[] data;
 
-        private CapturingPublicKey(byte[] data) {
+        private DummyPublicKey(byte[] data) {
             this.data = data;
         }
 

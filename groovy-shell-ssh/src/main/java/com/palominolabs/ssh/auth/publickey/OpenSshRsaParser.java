@@ -1,5 +1,6 @@
 package com.palominolabs.ssh.auth.publickey;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.math.BigInteger;
@@ -15,6 +16,12 @@ import java.security.spec.RSAPublicKeySpec;
  */
 @Immutable
 class OpenSshRsaParser implements PublicKeyParser {
+
+    @Nonnull
+    @Override
+    public String getKeyType() {
+        return OpenSshPublicKeyHandler.TYPE;
+    }
 
     @Override
     public PublicKey parse(byte[] data) {
