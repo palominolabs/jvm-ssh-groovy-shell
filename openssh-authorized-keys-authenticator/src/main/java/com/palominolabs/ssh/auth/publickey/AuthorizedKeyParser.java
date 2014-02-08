@@ -1,9 +1,7 @@
-package com.palominolabs.ssh.auth;
+package com.palominolabs.ssh.auth.publickey;
 
 import com.google.common.base.Predicate;
 import com.google.common.io.BaseEncoding;
-import com.palominolabs.ssh.auth.publickey.PublicKeyLoader;
-import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,0 +1,19 @@
+
+
+dependencies {
+  compile('org.apache.sshd:apache-sshd:0.9.0') {
+    exclude group: 'org.slf4j', module: 'slf4j-simple'
+  }
+
+  compile 'com.google.code.findbugs:jsr305:2.0.2'
+  compile 'com.google.guava:guava:16.0.1'
+
+  testCompile 'junit:junit:4.11'
+
+  testRuntime "org.slf4j:slf4j-simple:$depVersions.slf4j"
+  testRuntime "org.slf4j:log4j-over-slf4j:$depVersions.slf4j"
+  testRuntime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
+  testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
+
+}
+
