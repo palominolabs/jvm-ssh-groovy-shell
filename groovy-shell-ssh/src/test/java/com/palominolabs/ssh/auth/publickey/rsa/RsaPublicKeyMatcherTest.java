@@ -1,4 +1,4 @@
-package com.palominolabs.ssh.auth.publickey;
+package com.palominolabs.ssh.auth.publickey.rsa;
 
 import com.google.common.io.Resources;
 import org.junit.Test;

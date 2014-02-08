@@ -1,4 +1,6 @@
-package com.palominolabs.ssh.auth.publickey;
+package com.palominolabs.ssh.auth.publickey.rsa;
+
+import com.palominolabs.ssh.auth.publickey.KeyMatcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
