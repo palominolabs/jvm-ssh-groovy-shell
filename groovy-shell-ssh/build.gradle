@@ -15,6 +15,15 @@ dependencies {
   runtime 'jline:jline:2.11'
 
   compile 'com.google.code.findbugs:jsr305:2.0.2'
+  compile 'com.google.guava:guava:16.0.1'
+
+  testCompile 'junit:junit:4.11'
+
+  testRuntime "org.slf4j:slf4j-simple:$depVersions.slf4j"
+  testRuntime "org.slf4j:log4j-over-slf4j:$depVersions.slf4j"
+  testRuntime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
+  testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
+
 }
 
 buildscript {

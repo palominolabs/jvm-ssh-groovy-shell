@@ -4,12 +4,6 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 
 mainClassName = 'com.palominolabs.groovy.ssh.demo.DemoMain'
 
-ext {
-  depVersions = [
-      slf4j: '1.7.6',
-  ]
-}
-
 dependencies {
   compile 'com.palominolabs.http:jetty-http-server-wrapper:1.0.1'
 

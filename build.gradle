@@ -8,6 +8,11 @@ subprojects {
     mavenCentral()
   }
 
+  ext {
+    depVersions = [
+        slf4j: '1.7.6',
+    ]
+  }
 }
 
 
