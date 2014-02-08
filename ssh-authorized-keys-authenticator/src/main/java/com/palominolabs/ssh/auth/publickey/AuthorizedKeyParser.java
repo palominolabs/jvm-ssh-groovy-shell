@@ -17,7 +17,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 
 @Immutable
@@ -27,9 +27,9 @@ final class AuthorizedKeyParser {
 
     private static final Pattern KEY_PATTERN = Pattern.compile("^([-a-z\\d]+) ([a-zA-Z0-9/+=]+) ([^ ]+)$");
 
-    private final List<PublicKeyLoader> loaders;
+    private final Iterable<PublicKeyLoader> loaders;
 
-    AuthorizedKeyParser(List<PublicKeyLoader> loaders) {
+    AuthorizedKeyParser(Iterable<PublicKeyLoader> loaders) {
         this.loaders = loaders;
     }
 
@@ -41,7 +41,7 @@ final class AuthorizedKeyParser {
      * @throws IOException if key data can't be read
      */
     @Nonnull
-    List<PublicKeyMatcher> parse(@Nonnull InputStream keyData) throws IOException {
+    Iterable<PublicKeyMatcher> parse(@Nonnull InputStream keyData) throws IOException {
 
         List<PublicKeyMatcher> keys = new ArrayList<>();
 

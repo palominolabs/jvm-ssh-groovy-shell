@@ -1,19 +1,16 @@
 package com.palominolabs.ssh.auth.publickey;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Iterables;
 import org.apache.sshd.server.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.PublicKey;
-import java.util.Iterator;
-import java.util.List;
+
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.getFirst;
 
 /**
  * Authenticates users against an authorized_keys file in OpenSSH format. See the sshd(8) manpage for details on the
@@ -31,50 +28,29 @@ public final class AuthorizedKeysPublickeyAuthenticator implements PublickeyAuth
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeysPublickeyAuthenticator.class);
 
-    private final Supplier<InputStream> inputSupplier;
+    private final Iterable<PublicKeyLoader> loaders;
+    private final PublicKeyMatcherProvider provider;
 
-    private final AuthorizedKeyParser parser;
-
-    AuthorizedKeysPublickeyAuthenticator(List<PublicKeyLoader> loaders,
-        Supplier<InputStream> inputSupplier) {
-        parser = new AuthorizedKeyParser(loaders);
-        this.inputSupplier = inputSupplier;
+    AuthorizedKeysPublickeyAuthenticator(Iterable<PublicKeyLoader> loaders, PublicKeyMatcherProvider provider) {
+        this.loaders = loaders;
+        this.provider = provider;
     }
 
     @Override
     public boolean authenticate(String username, final PublicKey key, ServerSession session) {
 
-        List<PublicKeyMatcher> authenticators = getKeys();
-        if (authenticators == null) {
-            return false;
-        }
+        Iterable<PublicKeyMatcher> matchers = provider.getMatchers(loaders);
 
-        Iterator<PublicKeyMatcher> matchers =
-            Iterables.filter(authenticators, new MatcherMatchPredicate(key)).iterator();
+        PublicKeyMatcher matcher =
+            getFirst(filter(matchers, new MatcherMatchPredicate(key)), null);
 
-        if (matchers.hasNext()) {
-            logger.info("Matched key with comment " + matchers.next().getComment());
+        if (matcher != null) {
+            logger.info("Matched key with comment " + matcher.getComment());
             return true;
         }
 
         logger.info("Did not match any keys");
         return false;
-    }
-
-    @Nullable
-    List<PublicKeyMatcher> getKeys() {
-        InputStream inputStream = inputSupplier.get();
-        if (inputStream == null) {
-            logger.warn("Could not load key data stream; rejecting");
-            return null;
-        }
-
-        try {
-            return parser.parse(inputStream);
-        } catch (IOException e) {
-            logger.warn("Could not read authorized keys", e);
-            return null;
-        }
     }
 
     static class MatcherMatchPredicate implements Predicate<PublicKeyMatcher> {

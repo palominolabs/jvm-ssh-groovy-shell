@@ -1,18 +1,11 @@
 package com.palominolabs.ssh.auth.publickey;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
-import org.easymock.EasyMock;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.easymock.EasyMock.anyInt;
+import static org.easymock.EasyMock.createStrictMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
@@ -21,65 +14,54 @@ import static org.junit.Assert.assertTrue;
 
 public final class AuthorizedKeysPublickeyAuthenticatorTest {
 
-    private final ArrayList<PublicKeyLoader> loaders =
-        Lists.<PublicKeyLoader>newArrayList(new FakePublicKeyLoader(false));
+    private final List<PublicKeyLoader> loaders = Lists.newArrayList();
 
     @Test
-    public void testRejectsWhenCantGetKeyStream() {
-        AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, Suppliers.<InputStream>ofInstance(null));
+    public void testRejectsWhenNoMatchersLoaded() {
 
-        assertFalse(auth.authenticate("user", null, null));
-    }
+        PublicKeyMatcherProvider provider = createStrictMock(PublicKeyMatcherProvider.class);
 
-    @Test
-    public void testRejectsWhenCantLoadKeyStream() throws IOException {
-        InputStream stream = EasyMock.createStrictMock(InputStream.class);
-
-        expect(stream.read(EasyMock.<byte[]>anyObject(), anyInt(), anyInt())).andThrow(new IOException("boom"));
-        stream.close();
-
-        replay(stream);
+        expect(provider.getMatchers(loaders)).andReturn(Lists.<PublicKeyMatcher>newArrayList());
+        replay(provider);
 
         AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, Suppliers.ofInstance(stream));
-
-        assertFalse(auth.authenticate("user", null, null));
-
-        verify(stream);
-    }
-
-    @Test
-    public void testRejectsWhenCantParseKeys() {
-        InputStream stream = new ByteArrayInputStream("bad-format".getBytes(UTF_8));
-
-        AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, Suppliers.ofInstance(stream));
-
-        assertFalse(auth.authenticate("user", null, null));
-    }
-
-    @Test
-    public void testRejectsWhenNoMatcherMatches() {
-        InputStream stream = new ByteArrayInputStream("dummy aaa comment1".getBytes(UTF_8));
-
-        AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, Suppliers.ofInstance(stream));
+            new AuthorizedKeysPublickeyAuthenticator(loaders, provider);
 
         assertFalse(auth.authenticate("foo", null, null));
+        verify(provider);
     }
 
     @Test
     public void testAcceptsWhenOneMatcherMatches() {
-        InputStream stream = new ByteArrayInputStream("dummy aaa comment1".getBytes(UTF_8));
+        PublicKeyMatcherProvider provider = createStrictMock(PublicKeyMatcherProvider.class);
 
-        List<PublicKeyLoader> loaders =
-            Lists.<PublicKeyLoader>newArrayList(new FakePublicKeyLoader(true));
+        expect(provider.getMatchers(loaders))
+            .andReturn(Lists.<PublicKeyMatcher>newArrayList(new FakePublicKeyMatcher(new byte[0], "comment", true)));
+
+        replay(provider);
 
         AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(
-                loaders, Suppliers.ofInstance(stream));
+            new AuthorizedKeysPublickeyAuthenticator(loaders, provider);
 
         assertTrue(auth.authenticate("foo", null, null));
+
+        verify(provider);
+    }
+
+    @Test
+    public void testAcceptsWhenOnlyMatcherDoesntMatch() {
+        PublicKeyMatcherProvider provider = createStrictMock(PublicKeyMatcherProvider.class);
+
+        expect(provider.getMatchers(loaders))
+            .andReturn(Lists.<PublicKeyMatcher>newArrayList(new FakePublicKeyMatcher(new byte[0], "comment", false)));
+
+        replay(provider);
+
+        AuthorizedKeysPublickeyAuthenticator auth =
+            new AuthorizedKeysPublickeyAuthenticator(loaders, provider);
+
+        assertFalse(auth.authenticate("foo", null, null));
+
+        verify(provider);
     }
 }

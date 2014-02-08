@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -28,7 +29,7 @@ public final class AuthorizedKeyParserTest {
         ByteArrayInputStream is =
             new ByteArrayInputStream("dummy aaa comment1\ndummy bbb comment2".getBytes(UTF_8));
 
-        List<PublicKeyMatcher> keys = authorizedKeyParser.parse(is);
+        List<PublicKeyMatcher> keys = newArrayList(authorizedKeyParser.parse(is));
 
         assertEquals(2, keys.size());
 
@@ -41,7 +42,7 @@ public final class AuthorizedKeyParserTest {
         ByteArrayInputStream is =
             new ByteArrayInputStream("asdf\ndummy bbb comment2\nfoo".getBytes(UTF_8));
 
-        List<PublicKeyMatcher> keys = authorizedKeyParser.parse(is);
+        List<PublicKeyMatcher> keys = newArrayList(authorizedKeyParser.parse(is));
 
         assertEquals(1, keys.size());
 
@@ -53,7 +54,7 @@ public final class AuthorizedKeyParserTest {
         ByteArrayInputStream is =
             new ByteArrayInputStream("# foo\ndummy bbb comment2".getBytes(UTF_8));
 
-        List<PublicKeyMatcher> keys = authorizedKeyParser.parse(is);
+        List<PublicKeyMatcher> keys = newArrayList(authorizedKeyParser.parse(is));
 
         assertEquals(1, keys.size());
 
@@ -65,7 +66,7 @@ public final class AuthorizedKeyParserTest {
         ByteArrayInputStream is =
             new ByteArrayInputStream("dummy2 aaa comment1\ndummy bbb comment2".getBytes(UTF_8));
 
-        List<PublicKeyMatcher> keys = authorizedKeyParser.parse(is);
+        List<PublicKeyMatcher> keys = newArrayList(authorizedKeyParser.parse(is));
 
         assertEquals(1, keys.size());
 
