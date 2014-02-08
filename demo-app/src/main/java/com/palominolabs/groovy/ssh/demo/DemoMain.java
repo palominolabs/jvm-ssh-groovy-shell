@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.ServletModule;
-import com.palominolabs.groovy.ssh.GroovyShellCommandFactory;
+import com.palominolabs.ssh.groovy.GroovyShellCommandFactory;
 import com.palominolabs.http.server.HttpServerConnectorConfig;
 import com.palominolabs.http.server.HttpServerWrapperConfig;
 import com.palominolabs.http.server.HttpServerWrapperFactory;

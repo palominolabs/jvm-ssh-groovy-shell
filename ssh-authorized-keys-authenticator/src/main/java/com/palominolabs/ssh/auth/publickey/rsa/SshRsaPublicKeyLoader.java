@@ -19,7 +19,7 @@ import java.security.spec.RSAPublicKeySpec;
  * and http://stackoverflow.com/questions/12749858/rsa-public-key-format and http://blog.oddbit.com/2011/05/08/converting-openssh-public-keys/
  */
 @Immutable
-class OpenSshRsaPublicKeyLoader implements PublicKeyLoader {
+class SshRsaPublicKeyLoader implements PublicKeyLoader {
 
     static final String SSH_KEY_TYPE = "ssh-rsa";
 

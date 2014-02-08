@@ -13,7 +13,7 @@ import java.security.interfaces.RSAPublicKey;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
-public final class OpenSshRsaPublicKeyLoaderTest {
+public final class SshRsaPublicKeyLoaderTest {
     @Test
     public void testParseValidLine() throws IOException {
         PublicKeyMatcher key = getRsaKey(Resources.getResource(getClass(), "rsa1.pub"));
@@ -31,6 +31,6 @@ public final class OpenSshRsaPublicKeyLoaderTest {
 
         byte[] bytes = BaseEncoding.base64().decode(base64);
 
-        return new OpenSshRsaPublicKeyLoader().buildMatcher(bytes, chunks[1]);
+        return new SshRsaPublicKeyLoader().buildMatcher(bytes, chunks[1]);
     }
 }

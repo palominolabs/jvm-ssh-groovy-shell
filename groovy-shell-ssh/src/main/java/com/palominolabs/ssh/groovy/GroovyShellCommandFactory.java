@@ -1,4 +1,4 @@
-package com.palominolabs.groovy.ssh;
+package com.palominolabs.ssh.groovy;
 
 import groovy.lang.Binding;
 import org.apache.sshd.common.Factory;

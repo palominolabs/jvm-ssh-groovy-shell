@@ -13,7 +13,7 @@ public final class RsaPublicKeyMatcherTest {
     @Test
     public void testSameKeyMatches() throws IOException {
         RsaPublicKeyMatcher matcher =
-            (RsaPublicKeyMatcher) OpenSshRsaPublicKeyLoaderTest
+            (RsaPublicKeyMatcher) SshRsaPublicKeyLoaderTest
                 .getRsaKey(Resources.getResource(getClass(), "rsa1.pub"));
 
         assertTrue(matcher.isMatch(matcher.getKey()));
@@ -21,9 +21,9 @@ public final class RsaPublicKeyMatcherTest {
 
     @Test
     public void testDifferentKeyDoesntMatch() throws IOException {
-        PublicKeyMatcher matcher1 = OpenSshRsaPublicKeyLoaderTest.getRsaKey(Resources.getResource(getClass(), "rsa1.pub"));
+        PublicKeyMatcher matcher1 = SshRsaPublicKeyLoaderTest.getRsaKey(Resources.getResource(getClass(), "rsa1.pub"));
         RsaPublicKeyMatcher matcher2 =
-            (RsaPublicKeyMatcher) OpenSshRsaPublicKeyLoaderTest
+            (RsaPublicKeyMatcher) SshRsaPublicKeyLoaderTest
                 .getRsaKey(Resources.getResource(getClass(), "rsa2.pub"));
 
         assertFalse(matcher1.isMatch(matcher2.getKey()));
