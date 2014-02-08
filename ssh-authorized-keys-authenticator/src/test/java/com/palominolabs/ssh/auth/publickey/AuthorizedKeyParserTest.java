@@ -22,7 +22,7 @@ public final class AuthorizedKeyParserTest {
     public void setUp() {
         authorizedKeyParser =
             new AuthorizedKeyParser(
-                Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory(false)));
+                Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory()));
     }
 
     @Test

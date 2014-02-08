@@ -4,12 +4,6 @@ import javax.annotation.Nonnull;
 
 class FakePublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
-    private final boolean matcherShouldMatch;
-
-    FakePublicKeyMatcherFactory(boolean matcherShouldMatch) {
-        this.matcherShouldMatch = matcherShouldMatch;
-    }
-
     @Nonnull
     @Override
     public String getKeyType() {
@@ -19,6 +13,6 @@ class FakePublicKeyMatcherFactory implements PublicKeyMatcherFactory {
     @Nonnull
     @Override
     public PublicKeyMatcher buildMatcher(byte[] data, String comment) {
-        return new FakePublicKeyMatcher(data, comment, matcherShouldMatch);
+        return new FakePublicKeyMatcher(data, comment, false);
     }
 }

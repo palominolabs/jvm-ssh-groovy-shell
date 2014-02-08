@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 public final class AuthorizedKeysPublicKeyDataSourceTest {
 
     private final ArrayList<PublicKeyMatcherFactory> loaders =
-        Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory(false));
+        Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory());
 
     @Test
     public void testReturnsEmptyWhenCantGetStream() {
