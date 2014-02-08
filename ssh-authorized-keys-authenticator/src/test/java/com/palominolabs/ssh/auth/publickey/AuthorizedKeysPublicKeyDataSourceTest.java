@@ -18,15 +18,15 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertTrue;
 
-public final class AuthorizedKeysMatcherProviderTest {
+public final class AuthorizedKeysPublicKeyDataSourceTest {
 
-    private final ArrayList<PublicKeyLoader> loaders =
-        Lists.<PublicKeyLoader>newArrayList(new FakePublicKeyLoader(false));
+    private final ArrayList<PublicKeyMatcherFactory> loaders =
+        Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory(false));
 
     @Test
     public void testReturnsEmptyWhenCantGetStream() {
-        AuthorizedKeysMatcherProvider provider =
-            new AuthorizedKeysMatcherProvider(Suppliers.<InputStream>ofInstance(null));
+        AuthorizedKeysPublicKeyDataSource provider =
+            new AuthorizedKeysPublicKeyDataSource(Suppliers.<InputStream>ofInstance(null));
 
         assertTrue(isEmpty(provider.getMatchers(loaders)));
     }
@@ -40,8 +40,8 @@ public final class AuthorizedKeysMatcherProviderTest {
 
         replay(stream);
 
-        AuthorizedKeysMatcherProvider provider =
-            new AuthorizedKeysMatcherProvider(Suppliers.ofInstance(stream));
+        AuthorizedKeysPublicKeyDataSource provider =
+            new AuthorizedKeysPublicKeyDataSource(Suppliers.ofInstance(stream));
 
         assertTrue(isEmpty(provider.getMatchers(loaders)));
 
@@ -52,8 +52,8 @@ public final class AuthorizedKeysMatcherProviderTest {
     public void testReturnsEmptyWhenCantParse() {
         InputStream stream = new ByteArrayInputStream("bad-format".getBytes(UTF_8));
 
-        AuthorizedKeysMatcherProvider provider =
-            new AuthorizedKeysMatcherProvider(Suppliers.ofInstance(stream));
+        AuthorizedKeysPublicKeyDataSource provider =
+            new AuthorizedKeysPublicKeyDataSource(Suppliers.ofInstance(stream));
 
         assertTrue(isEmpty(provider.getMatchers(loaders)));
     }

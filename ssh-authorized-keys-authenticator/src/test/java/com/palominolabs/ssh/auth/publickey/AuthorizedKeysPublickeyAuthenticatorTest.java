@@ -14,54 +14,54 @@ import static org.junit.Assert.assertTrue;
 
 public final class AuthorizedKeysPublickeyAuthenticatorTest {
 
-    private final List<PublicKeyLoader> loaders = Lists.newArrayList();
+    private final List<PublicKeyMatcherFactory> loaders = Lists.newArrayList();
 
     @Test
     public void testRejectsWhenNoMatchersLoaded() {
 
-        PublicKeyMatcherProvider provider = createStrictMock(PublicKeyMatcherProvider.class);
+        PublicKeyDataSource dataSource = createStrictMock(PublicKeyDataSource.class);
 
-        expect(provider.getMatchers(loaders)).andReturn(Lists.<PublicKeyMatcher>newArrayList());
-        replay(provider);
+        expect(dataSource.getMatchers(loaders)).andReturn(Lists.<PublicKeyMatcher>newArrayList());
+        replay(dataSource);
 
         AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, provider);
+            new AuthorizedKeysPublickeyAuthenticator(loaders, dataSource);
 
         assertFalse(auth.authenticate("foo", null, null));
-        verify(provider);
+        verify(dataSource);
     }
 
     @Test
     public void testAcceptsWhenOneMatcherMatches() {
-        PublicKeyMatcherProvider provider = createStrictMock(PublicKeyMatcherProvider.class);
+        PublicKeyDataSource dataSource = createStrictMock(PublicKeyDataSource.class);
 
-        expect(provider.getMatchers(loaders))
+        expect(dataSource.getMatchers(loaders))
             .andReturn(Lists.<PublicKeyMatcher>newArrayList(new FakePublicKeyMatcher(new byte[0], "comment", true)));
 
-        replay(provider);
+        replay(dataSource);
 
         AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, provider);
+            new AuthorizedKeysPublickeyAuthenticator(loaders, dataSource);
 
         assertTrue(auth.authenticate("foo", null, null));
 
-        verify(provider);
+        verify(dataSource);
     }
 
     @Test
     public void testAcceptsWhenOnlyMatcherDoesntMatch() {
-        PublicKeyMatcherProvider provider = createStrictMock(PublicKeyMatcherProvider.class);
+        PublicKeyDataSource dataSource = createStrictMock(PublicKeyDataSource.class);
 
-        expect(provider.getMatchers(loaders))
+        expect(dataSource.getMatchers(loaders))
             .andReturn(Lists.<PublicKeyMatcher>newArrayList(new FakePublicKeyMatcher(new byte[0], "comment", false)));
 
-        replay(provider);
+        replay(dataSource);
 
         AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, provider);
+            new AuthorizedKeysPublickeyAuthenticator(loaders, dataSource);
 
         assertFalse(auth.authenticate("foo", null, null));
 
-        verify(provider);
+        verify(dataSource);
     }
 }

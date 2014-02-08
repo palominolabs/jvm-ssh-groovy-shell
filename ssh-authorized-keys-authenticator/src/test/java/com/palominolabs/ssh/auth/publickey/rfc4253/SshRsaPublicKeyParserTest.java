@@ -2,7 +2,7 @@ package com.palominolabs.ssh.auth.publickey.rfc4253;
 
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.Resources;
-import com.palominolabs.ssh.auth.publickey.rsa.RsaPublicKeyLoaderTest;
+import com.palominolabs.ssh.auth.publickey.rsa.RsaPublicKeyMatcherFactoryTest;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 public final class SshRsaPublicKeyParserTest {
     @Test
     public void testParseValidKey() throws IOException, InvalidKeySpecException {
-        String[] chunks = Resources.toString(getResource(RsaPublicKeyLoaderTest.class, "rsa1.pub"), UTF_8).split(" ");
+        String[] chunks = Resources.toString(getResource(RsaPublicKeyMatcherFactoryTest.class, "rsa1.pub"), UTF_8).split(" ");
         byte[] bytes = BaseEncoding.base64().decode(chunks[1]);
 
         RSAPublicKey key = new SshRsaPublicKeyParser(bytes).getKey();

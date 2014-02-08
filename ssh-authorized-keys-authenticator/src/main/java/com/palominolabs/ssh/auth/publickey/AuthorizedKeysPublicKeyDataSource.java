@@ -10,24 +10,23 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Implements PublicKeyMatcherProvider using an InputStream to an OpenSSH-format authorized_keys file. The file is
- * re-read every time, hence the use of a Supplier. This allows changes to the file to take effect immediately without
- * requiring a restart.
+ * Uses an InputStream to an OpenSSH-format authorized_keys file. The file is re-read every time, hence the use of a
+ * Supplier. This allows changes to the file to take effect immediately without requiring a restart.
  */
-final class AuthorizedKeysMatcherProvider implements PublicKeyMatcherProvider {
+public final class AuthorizedKeysPublicKeyDataSource implements PublicKeyDataSource {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeysMatcherProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeysPublicKeyDataSource.class);
 
     private final Supplier<InputStream> inputSupplier;
 
-    AuthorizedKeysMatcherProvider(Supplier<InputStream> inputSupplier) {
+    AuthorizedKeysPublicKeyDataSource(Supplier<InputStream> inputSupplier) {
         this.inputSupplier = inputSupplier;
     }
 
     @Nonnull
     @Override
-    public Iterable<PublicKeyMatcher> getMatchers(@Nonnull Iterable<PublicKeyLoader> loaders) {
-        AuthorizedKeyParser parser = new AuthorizedKeyParser(loaders);
+    public Iterable<PublicKeyMatcher> getMatchers(@Nonnull Iterable<PublicKeyMatcherFactory> factories) {
+        AuthorizedKeyParser parser = new AuthorizedKeyParser(factories);
 
         InputStream inputStream = inputSupplier.get();
         if (inputStream == null) {

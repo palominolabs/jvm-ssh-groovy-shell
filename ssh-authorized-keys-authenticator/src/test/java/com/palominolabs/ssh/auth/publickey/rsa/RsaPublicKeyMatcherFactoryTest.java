@@ -14,7 +14,7 @@ import java.security.spec.InvalidKeySpecException;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
-public final class RsaPublicKeyLoaderTest {
+public final class RsaPublicKeyMatcherFactoryTest {
     @Test
     public void testParseValidLine() throws IOException, InvalidKeySpecException {
         PublicKeyMatcher matcher = getRsaMatcher(Resources.getResource(getClass(), "rsa1.pub"));
@@ -33,6 +33,6 @@ public final class RsaPublicKeyLoaderTest {
 
         byte[] bytes = BaseEncoding.base64().decode(base64);
 
-        return (RsaPublicKeyMatcher) new RsaPublicKeyLoader().buildMatcher(bytes, chunks[1]);
+        return (RsaPublicKeyMatcher) new RsaPublicKeyMatcherFactory().buildMatcher(bytes, chunks[1]);
     }
 }

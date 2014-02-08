@@ -28,10 +28,10 @@ final class AuthorizedKeyParser {
 
     private static final Pattern KEY_PATTERN = Pattern.compile("^([-a-z\\d]+) ([a-zA-Z0-9/+=]+) ([^ ]+)$");
 
-    private final Iterable<PublicKeyLoader> loaders;
+    private final Iterable<PublicKeyMatcherFactory> matcherFactories;
 
-    AuthorizedKeyParser(Iterable<PublicKeyLoader> loaders) {
-        this.loaders = loaders;
+    AuthorizedKeyParser(Iterable<PublicKeyMatcherFactory> matcherFactories) {
+        this.matcherFactories = matcherFactories;
     }
 
     /**
@@ -73,9 +73,9 @@ final class AuthorizedKeyParser {
 
                 final String type = matcher.group(1);
 
-                PublicKeyLoader loader = getFirst(filter(loaders, new KeyTypePredicate(type)), null);
+                PublicKeyMatcherFactory factory = getFirst(filter(matcherFactories, new KeyTypePredicate(type)), null);
 
-                if (loader == null) {
+                if (factory == null) {
                     logger.warn("Line " + lineNum + ": Invalid key type: <" + type + ">");
                     continue;
                 }
@@ -84,7 +84,7 @@ final class AuthorizedKeyParser {
                 String comment = matcher.group(3);
 
                 try {
-                    matchers.add(loader.buildMatcher(BaseEncoding.base64().decode(keyBase64), comment));
+                    matchers.add(factory.buildMatcher(BaseEncoding.base64().decode(keyBase64), comment));
                 } catch (InvalidKeySpecException e) {
                     logger.warn("Could not parse key data", e);
                 }
@@ -98,7 +98,7 @@ final class AuthorizedKeyParser {
         return matchers;
     }
 
-    private static class KeyTypePredicate implements Predicate<PublicKeyLoader> {
+    private static class KeyTypePredicate implements Predicate<PublicKeyMatcherFactory> {
         private final String type;
 
         private KeyTypePredicate(String type) {
@@ -106,7 +106,7 @@ final class AuthorizedKeyParser {
         }
 
         @Override
-        public boolean apply(@Nullable PublicKeyLoader input) {
+        public boolean apply(@Nullable PublicKeyMatcherFactory input) {
             return input.getKeyType().equals(type);
         }
     }

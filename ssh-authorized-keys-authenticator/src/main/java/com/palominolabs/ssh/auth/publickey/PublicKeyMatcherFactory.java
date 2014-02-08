@@ -8,7 +8,7 @@ import java.security.spec.InvalidKeySpecException;
  * Loads data from an authorized_keys entry.
  */
 @ThreadSafe
-public interface PublicKeyLoader {
+public interface PublicKeyMatcherFactory {
 
     /**
      * @return the key type that this parser can handle (e.g. "ssh-rsa").
@@ -18,7 +18,7 @@ public interface PublicKeyLoader {
 
     /**
      * Build a matcher from an authorized_keys entry. The entry must have the type provided by {@link
-     * PublicKeyLoader#getKeyType()}.
+     * PublicKeyMatcherFactory#getKeyType()}.
      *
      * @param data    PEM encoded key data
      * @param comment comment for the authorized key entry

@@ -21,7 +21,7 @@ public final class AuthorizedKeyParserTest {
     @Before
     public void setUp() {
         authorizedKeyParser =
-            new AuthorizedKeyParser(Lists.<PublicKeyLoader>newArrayList(new FakePublicKeyLoader(false)));
+            new AuthorizedKeyParser(Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory(false)));
     }
 
     @Test

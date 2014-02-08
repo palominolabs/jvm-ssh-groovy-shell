@@ -93,7 +93,7 @@ public final class RsaPublicKeyMatcherTest {
     }
 
     private RsaPublicKeyMatcher getMatcher(String resourceName) throws IOException, InvalidKeySpecException {
-        return RsaPublicKeyLoaderTest.getRsaMatcher(Resources.getResource(getClass(), resourceName));
+        return RsaPublicKeyMatcherFactoryTest.getRsaMatcher(Resources.getResource(getClass(), resourceName));
     }
 
     static class StubRsaPublicKey implements RSAPublicKey {

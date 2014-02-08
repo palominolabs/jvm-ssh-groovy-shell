@@ -2,11 +2,11 @@ package com.palominolabs.ssh.auth.publickey;
 
 import javax.annotation.Nonnull;
 
-class FakePublicKeyLoader implements PublicKeyLoader {
+class FakePublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
     private final boolean matcherShouldMatch;
 
-    FakePublicKeyLoader(boolean matcherShouldMatch) {
+    FakePublicKeyMatcherFactory(boolean matcherShouldMatch) {
         this.matcherShouldMatch = matcherShouldMatch;
     }
 

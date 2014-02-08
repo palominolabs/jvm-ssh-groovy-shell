@@ -1,6 +1,6 @@
 package com.palominolabs.ssh.auth.publickey.rsa;
 
-import com.palominolabs.ssh.auth.publickey.PublicKeyLoader;
+import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 import com.palominolabs.ssh.auth.publickey.rfc4253.SshRsaPublicKeyParser;
 
@@ -9,7 +9,7 @@ import javax.annotation.concurrent.Immutable;
 import java.security.spec.InvalidKeySpecException;
 
 @Immutable
-class RsaPublicKeyLoader implements PublicKeyLoader {
+class RsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
     @Nonnull
     @Override
