@@ -1,6 +1,7 @@
 package com.palominolabs.ssh.auth.publickey.rsa;
 
-import com.palominolabs.ssh.auth.publickey.PublicKeyParser;
+import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
+import com.palominolabs.ssh.auth.publickey.PublicKeyLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -9,6 +10,7 @@ import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 
@@ -17,17 +19,20 @@ import java.security.spec.RSAPublicKeySpec;
  * and http://stackoverflow.com/questions/12749858/rsa-public-key-format and http://blog.oddbit.com/2011/05/08/converting-openssh-public-keys/
  */
 @Immutable
-class OpenSshRsaParser implements PublicKeyParser {
+class OpenSshRsaPublicKeyLoader implements PublicKeyLoader {
+
+    static final String SSH_KEY_TYPE = "ssh-rsa";
 
     @Nonnull
     @Override
     public String getKeyType() {
-        return OpenSshPublicKeyHandler.TYPE;
+        return SSH_KEY_TYPE;
     }
 
+    @Nonnull
     @Override
-    public PublicKey parse(byte[] data) {
-        return new StatefulParser(data).getKey();
+    public PublicKeyMatcher buildMatcher(byte[] data, String comment) {
+        return new RsaPublicKeyMatcher((RSAPublicKey) new StatefulParser(data).getKey(), comment);
     }
 
     @NotThreadSafe
@@ -42,7 +47,7 @@ class OpenSshRsaParser implements PublicKeyParser {
 
         private PublicKey getKey() {
             String type = decodeType();
-            if (!type.equals(OpenSshPublicKeyHandler.TYPE)) {
+            if (!type.equals(SSH_KEY_TYPE)) {
                 throw new IllegalArgumentException("Key data has invalid type: " + type);
             }
             BigInteger e = decodeBigInt();

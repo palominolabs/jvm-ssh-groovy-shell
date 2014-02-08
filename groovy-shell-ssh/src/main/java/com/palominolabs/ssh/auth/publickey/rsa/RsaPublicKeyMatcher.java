@@ -1,23 +1,47 @@
 package com.palominolabs.ssh.auth.publickey.rsa;
 
-import com.palominolabs.ssh.auth.publickey.KeyMatcher;
+import com.google.common.annotations.VisibleForTesting;
+import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Objects;
 
-@Immutable
-class RsaPublicKeyMatcher implements KeyMatcher {
+@NotThreadSafe
+class RsaPublicKeyMatcher implements PublicKeyMatcher {
+
+    private final RSAPublicKey authorizedKey;
+    private final String comment;
+
+    RsaPublicKeyMatcher(RSAPublicKey authorizedKey, String comment) {
+        this.authorizedKey = authorizedKey;
+        this.comment = comment;
+    }
 
     @Override
-    public boolean matches(@Nonnull PublicKey key1, @Nonnull PublicKey key2) {
-        RSAPublicKey r1 = (RSAPublicKey) key1;
-        RSAPublicKey r2 = (RSAPublicKey) key2;
+    public boolean isMatch(@Nonnull PublicKey key) {
+        if (!(key instanceof RSAPublicKey)) {
+            return false;
+        }
 
-        return Objects.equals(r1.getPublicExponent(), r2.getPublicExponent())
-            && Objects.equals(r1.getModulus(), r2.getModulus())
-            && Objects.equals(r1.getAlgorithm(), r2.getAlgorithm());
+        RSAPublicKey other = (RSAPublicKey) key;
+
+        // TODO avoid timing side channel attack
+        return Objects.equals(authorizedKey.getPublicExponent(), other.getPublicExponent())
+            && Objects.equals(authorizedKey.getModulus(), other.getModulus())
+            && Objects.equals(authorizedKey.getAlgorithm(), other.getAlgorithm());
+    }
+
+    @Nonnull
+    @Override
+    public String getComment() {
+        return comment;
+    }
+
+    @VisibleForTesting
+    RSAPublicKey getKey() {
+        return authorizedKey;
     }
 }

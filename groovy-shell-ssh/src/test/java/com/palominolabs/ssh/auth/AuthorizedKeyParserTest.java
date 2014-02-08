@@ -2,7 +2,8 @@ package com.palominolabs.ssh.auth;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
-import com.palominolabs.ssh.auth.publickey.PublicKeyParser;
+import com.palominolabs.ssh.auth.publickey.PublicKeyLoader;
+import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public final class AuthorizedKeyParserTest {
 
     @Before
     public void setUp() {
-        authorizedKeyParser = new AuthorizedKeyParser(Lists.<PublicKeyParser>newArrayList(new DummyParser()));
+        authorizedKeyParser = new AuthorizedKeyParser(Lists.<PublicKeyLoader>newArrayList(new DummyLoader()));
     }
 
     @Test
@@ -30,7 +31,7 @@ public final class AuthorizedKeyParserTest {
         ByteArrayInputStream is =
             new ByteArrayInputStream("dummy aaa comment1\ndummy bbb comment2".getBytes(UTF_8));
 
-        List<AuthorizedKey> keys = authorizedKeyParser.parse(is);
+        List<PublicKeyMatcher> keys = authorizedKeyParser.parse(is);
 
         assertEquals(2, keys.size());
 
@@ -38,15 +39,38 @@ public final class AuthorizedKeyParserTest {
         assertKey(keys.get(1), "bbb", "comment2");
     }
 
-    private void assertKey(AuthorizedKey k0, String data, String comment) {
-        BaseEncoding b64 = BaseEncoding.base64();
-        assertArrayEquals(b64.decode(data), ((DummyPublicKey) k0.getPublicKey()).data);
+    @Test
+    public void testSkipsInvalidLnes() throws IOException {
+        ByteArrayInputStream is =
+            new ByteArrayInputStream("asdf\ndummy bbb comment2\nfoo".getBytes(UTF_8));
 
-        assertEquals(comment, k0.getComment());
-        assertEquals("dummy", k0.getKeyType());
+        List<PublicKeyMatcher> keys = authorizedKeyParser.parse(is);
+
+        assertEquals(1, keys.size());
+
+        assertKey(keys.get(0), "bbb", "comment2");
     }
 
-    private static class DummyParser implements PublicKeyParser {
+    @Test
+    public void testSkipsCommentLines() throws IOException {
+        ByteArrayInputStream is =
+            new ByteArrayInputStream("# foo\ndummy bbb comment2".getBytes(UTF_8));
+
+        List<PublicKeyMatcher> keys = authorizedKeyParser.parse(is);
+
+        assertEquals(1, keys.size());
+
+        assertKey(keys.get(0), "bbb", "comment2");
+    }
+
+    private void assertKey(PublicKeyMatcher k0, String data, String comment) {
+        BaseEncoding b64 = BaseEncoding.base64();
+        assertArrayEquals(b64.decode(data), ((DummyMatcher) k0).data);
+
+        assertEquals(comment, k0.getComment());
+    }
+
+    private static class DummyLoader implements PublicKeyLoader {
 
         @Nonnull
         @Override
@@ -54,33 +78,32 @@ public final class AuthorizedKeyParserTest {
             return "dummy";
         }
 
+        @Nonnull
         @Override
-        public PublicKey parse(byte[] data) {
-            return new DummyPublicKey(data);
+        public PublicKeyMatcher buildMatcher(byte[] data, String comment) {
+            return new DummyMatcher(data, comment);
         }
     }
 
-    private static class DummyPublicKey implements PublicKey {
+    private static class DummyMatcher implements PublicKeyMatcher {
 
         private final byte[] data;
+        private final String comment;
 
-        private DummyPublicKey(byte[] data) {
+        private DummyMatcher(byte[] data, String comment) {
             this.data = data;
+            this.comment = comment;
         }
 
         @Override
-        public String getAlgorithm() {
-            return "dummy";
+        public boolean isMatch(@Nonnull PublicKey key) {
+            throw new UnsupportedOperationException();
         }
 
+        @Nonnull
         @Override
-        public String getFormat() {
-            return "dummy";
-        }
-
-        @Override
-        public byte[] getEncoded() {
-            return data;
+        public String getComment() {
+            return comment;
         }
     }
 }
