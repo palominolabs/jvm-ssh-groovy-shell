@@ -41,6 +41,7 @@ final class AuthorizedKeyParser {
      * @return a list of matchers
      * @throws IOException if key data can't be read
      */
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Nonnull
     Iterable<PublicKeyMatcher> parse(@Nonnull InputStream keyData) throws IOException {
 

@@ -39,7 +39,7 @@ public final class AuthorizedKeyParserTest {
     }
 
     @Test
-    public void testSkipsInvalidLnes() throws IOException {
+    public void testSkipsInvalidLines() throws IOException {
         ByteArrayInputStream is =
             new ByteArrayInputStream("asdf\ndummy bbb comment2\nfoo".getBytes(UTF_8));
 
