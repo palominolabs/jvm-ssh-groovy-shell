@@ -16,7 +16,7 @@ import java.security.spec.RSAPublicKeySpec;
 public class SshRsaPublicKeyParser extends AbstractSshPublicKeyParser {
 
     /**
-     * @param bytes Key bytes in RFC 4253 format
+     * @param bytes RSA key bytes in RFC 4253 format
      */
     public SshRsaPublicKeyParser(byte[] bytes) {
         super(bytes);
