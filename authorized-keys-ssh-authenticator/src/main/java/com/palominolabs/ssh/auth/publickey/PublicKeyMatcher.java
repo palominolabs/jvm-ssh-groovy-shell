@@ -5,14 +5,14 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.security.PublicKey;
 
 /**
- * Determines if a public key matches a certain authorized key.
+ * Determines if a user-presented public key matches a predefined authorized key.
  */
 @NotThreadSafe
 public interface PublicKeyMatcher {
 
     /**
-     * @param key a public key to compare against
-     * @return true if the public key matches this matcher's internal key
+     * @param key a public key to allow or deny
+     * @return true if the public key is considered to match an authorized key
      */
     boolean isMatch(@Nonnull PublicKey key);
 
