@@ -20,11 +20,12 @@ public final class DsaPublicKeyMatcherFactoryTest {
 
         byte[] bytes = BaseEncoding.base64().decode(chunks[1]);
 
-        PublicKeyMatcher matcher = new DsaPublicKeyMatcherFactory().buildMatcher(bytes, chunks[1]);
+        PublicKeyMatcher matcher = new DsaPublicKeyMatcherFactory().buildMatcher(bytes, chunks[2].trim());
 
         DSAPublicKey publicKey = ((DsaPublicKeyMatcher) matcher).getKey();
 
         // decoding logic already covered in the key parser
         assertEquals(new BigInteger("1035488456611306799546464428508766441880259252349"), publicKey.getParams().getQ());
+        assertEquals("dsa1", matcher.getComment());
     }
 }
