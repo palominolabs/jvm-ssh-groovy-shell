@@ -5,9 +5,11 @@ import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.rfc4253.DsaSshPublicKeyParser;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.security.spec.InvalidKeySpecException;
 
-final class DsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory {
+@Immutable
+public final class DsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory {
     @Nonnull
     @Override
     public String getKeyType() {

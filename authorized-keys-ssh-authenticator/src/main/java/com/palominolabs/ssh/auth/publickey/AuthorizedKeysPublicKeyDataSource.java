@@ -19,7 +19,7 @@ public final class AuthorizedKeysPublicKeyDataSource implements PublicKeyDataSou
 
     private final Supplier<InputStream> inputSupplier;
 
-    AuthorizedKeysPublicKeyDataSource(Supplier<InputStream> inputSupplier) {
+    public AuthorizedKeysPublicKeyDataSource(Supplier<InputStream> inputSupplier) {
         this.inputSupplier = inputSupplier;
     }
 

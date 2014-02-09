@@ -9,7 +9,7 @@ import javax.annotation.concurrent.Immutable;
 import java.security.spec.InvalidKeySpecException;
 
 @Immutable
-class RsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory {
+public class RsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
     @Nonnull
     @Override

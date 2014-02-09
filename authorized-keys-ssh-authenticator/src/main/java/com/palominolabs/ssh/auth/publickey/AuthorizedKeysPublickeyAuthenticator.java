@@ -31,7 +31,7 @@ public final class AuthorizedKeysPublickeyAuthenticator implements PublickeyAuth
     private final Iterable<PublicKeyMatcherFactory> matcherFactories;
     private final PublicKeyDataSource dataSource;
 
-    AuthorizedKeysPublickeyAuthenticator(Iterable<PublicKeyMatcherFactory> matcherFactories,
+    public AuthorizedKeysPublickeyAuthenticator(Iterable<PublicKeyMatcherFactory> matcherFactories,
         PublicKeyDataSource dataSource) {
         this.matcherFactories = matcherFactories;
         this.dataSource = dataSource;
