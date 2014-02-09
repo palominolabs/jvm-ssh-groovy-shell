@@ -14,14 +14,14 @@ import static com.google.common.io.Resources.getResource;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
-public final class SshRsaPublicKeyParserTest {
+public final class RsaSshPublicKeyParserTest {
     @Test
     public void testParseValidKey() throws IOException, InvalidKeySpecException {
         String[] chunks =
             Resources.toString(getResource(RsaPublicKeyMatcherFactoryTest.class, "rsa1.pub"), UTF_8).split(" ");
         byte[] bytes = BaseEncoding.base64().decode(chunks[1]);
 
-        RSAPublicKey key = new SshRsaPublicKeyParser(bytes).getKey();
+        RSAPublicKey key = new RsaSshPublicKeyParser(bytes).getKey();
 
         assertEquals(new BigInteger("65537"), key.getPublicExponent());
         assertEquals(new BigInteger(

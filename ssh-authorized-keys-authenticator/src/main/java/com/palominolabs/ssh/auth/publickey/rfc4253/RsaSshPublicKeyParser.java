@@ -13,12 +13,12 @@ import java.security.spec.RSAPublicKeySpec;
  * In addition, see http://stackoverflow.com/questions/3531506/using-public-key-from-authorized-keys-with-java-security
  * and http://stackoverflow.com/questions/12749858/rsa-public-key-format and http://blog.oddbit.com/2011/05/08/converting-openssh-public-keys/
  */
-public class SshRsaPublicKeyParser extends AbstractSshPublicKeyParser {
+public class RsaSshPublicKeyParser extends AbstractSshPublicKeyParser {
 
     /**
      * @param bytes RSA key bytes in RFC 4253 format
      */
-    public SshRsaPublicKeyParser(byte[] bytes) {
+    public RsaSshPublicKeyParser(byte[] bytes) {
         super(bytes);
     }
 
