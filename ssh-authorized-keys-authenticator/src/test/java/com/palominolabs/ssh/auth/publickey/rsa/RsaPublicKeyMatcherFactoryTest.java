@@ -34,6 +34,6 @@ public final class RsaPublicKeyMatcherFactoryTest {
 
         byte[] bytes = BaseEncoding.base64().decode(base64);
 
-        return (RsaPublicKeyMatcher) new RsaPublicKeyMatcherFactory().buildMatcher(bytes, chunks[2]);
+        return (RsaPublicKeyMatcher) new RsaPublicKeyMatcherFactory().buildMatcher(bytes, chunks[2].trim());
     }
 }
