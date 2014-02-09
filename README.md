@@ -58,6 +58,6 @@ The demo app supports public key authentication; you simply need to tell it what
 ./gradlew -DDEMO_SSH_AUTHORIZED_KEYS=$HOME/.ssh/id_rsa.pub :demo-app:run
 ```
 
-In a real deployment, you'd probably use a file containing many such public keys, like the authorized_keys file you might already have on your servers, but for now pointing at your own public key will, of course, allow your private key to work.
+In a real deployment, you'd probably use a file containing many such public keys, like the `authorized_keys` file you might already have on your servers, but for now pointing at your own public key will, of course, allow your private key to work.
 
 Check the source of [`DemoMain`](https://github.com/palominolabs/ssh-groovy-shell/blob/master/demo-app/src/main/java/com/palominolabs/ssh/groovy/demo/DemoMain.java) to see how to hook up this style of authentication.
