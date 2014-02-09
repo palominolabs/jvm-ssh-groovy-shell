@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 import java.io.IOException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
@@ -14,23 +15,15 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Lists.newArrayList;
 
-/**
- * Uses an InputStream to an OpenSSH-format authorized_keys file. The file is re-read every time, hence the use of a
- * Supplier. This allows changes to the file to take effect immediately without requiring a restart.
- */
+@Immutable
 public final class AuthorizedKeysPublicKeyController implements PublicKeyMatcherController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeysPublicKeyController.class);
 
-    private final AuthorizedKeyDataSource dataSource;
-
-    public AuthorizedKeysPublicKeyController(AuthorizedKeyDataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    @Override
     @Nonnull
-    public Iterable<PublicKeyMatcher> getMatchers(@Nonnull Iterable<PublicKeyMatcherFactory> factories) {
+    @Override
+    public Iterable<PublicKeyMatcher> getMatchers(@Nonnull AuthorizedKeyDataSource dataSource,
+        @Nonnull Iterable<PublicKeyMatcherFactory> factories) {
 
         Iterable<AuthorizedKey> keys;
         try {

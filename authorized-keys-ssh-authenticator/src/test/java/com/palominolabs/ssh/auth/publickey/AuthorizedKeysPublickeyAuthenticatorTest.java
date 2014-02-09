@@ -20,48 +20,51 @@ public final class AuthorizedKeysPublickeyAuthenticatorTest {
     public void testRejectsWhenNoMatchersLoaded() {
 
         PublicKeyMatcherController controller = createStrictMock(PublicKeyMatcherController.class);
+        AuthorizedKeyDataSource dataSource = createStrictMock(AuthorizedKeyDataSource.class);
 
-        expect(controller.getMatchers(loaders)).andReturn(Lists.<PublicKeyMatcher>newArrayList());
-        replay(controller);
+        expect(controller.getMatchers(dataSource, loaders)).andReturn(Lists.<PublicKeyMatcher>newArrayList());
+        replay(controller, dataSource);
 
         AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, controller);
+            new AuthorizedKeysPublickeyAuthenticator(loaders, dataSource, controller);
 
         assertFalse(auth.authenticate("foo", null, null));
-        verify(controller);
+        verify(controller, dataSource);
     }
 
     @Test
     public void testAcceptsWhenOneMatcherMatches() {
         PublicKeyMatcherController controller = createStrictMock(PublicKeyMatcherController.class);
+        AuthorizedKeyDataSource dataSource = createStrictMock(AuthorizedKeyDataSource.class);
 
-        expect(controller.getMatchers(loaders))
+        expect(controller.getMatchers(dataSource, loaders))
             .andReturn(Lists.<PublicKeyMatcher>newArrayList(new FakePublicKeyMatcher(new byte[0], "comment", true)));
 
-        replay(controller);
+        replay(controller, dataSource);
 
         AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, controller);
+            new AuthorizedKeysPublickeyAuthenticator(loaders, dataSource, controller);
 
         assertTrue(auth.authenticate("foo", null, null));
 
-        verify(controller);
+        verify(controller, dataSource);
     }
 
     @Test
     public void testAcceptsWhenOnlyMatcherDoesntMatch() {
         PublicKeyMatcherController controller = createStrictMock(PublicKeyMatcherController.class);
+        AuthorizedKeyDataSource dataSource = createStrictMock(AuthorizedKeyDataSource.class);
 
-        expect(controller.getMatchers(loaders))
+        expect(controller.getMatchers(dataSource, loaders))
             .andReturn(Lists.<PublicKeyMatcher>newArrayList(new FakePublicKeyMatcher(new byte[0], "comment", false)));
 
-        replay(controller);
+        replay(controller, dataSource);
 
         AuthorizedKeysPublickeyAuthenticator auth =
-            new AuthorizedKeysPublickeyAuthenticator(loaders, controller);
+            new AuthorizedKeysPublickeyAuthenticator(loaders, dataSource, controller);
 
         assertFalse(auth.authenticate("foo", null, null));
 
-        verify(controller);
+        verify(controller, dataSource);
     }
 }

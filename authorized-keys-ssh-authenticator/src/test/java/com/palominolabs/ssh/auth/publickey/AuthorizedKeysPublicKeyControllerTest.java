@@ -28,6 +28,7 @@ public final class AuthorizedKeysPublicKeyControllerTest {
 
     private final ArrayList<PublicKeyMatcherFactory> loaders =
         Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory());
+    private final AuthorizedKeysPublicKeyController controller = new AuthorizedKeysPublicKeyController();
 
     @Test
     public void testReturnsEmptyWhenDataSourceThrowsException() throws IOException {
@@ -36,10 +37,7 @@ public final class AuthorizedKeysPublicKeyControllerTest {
         expect(dataSource.loadKeys()).andThrow(new IOException("kaboom"));
         replay(dataSource);
 
-        AuthorizedKeysPublicKeyController controller =
-            new AuthorizedKeysPublicKeyController(dataSource);
-
-        assertTrue(isEmpty(controller.getMatchers(loaders)));
+        assertTrue(isEmpty(controller.getMatchers(dataSource, loaders)));
 
         verify(dataSource);
     }
@@ -52,28 +50,21 @@ public final class AuthorizedKeysPublicKeyControllerTest {
             .andThrow(new InvalidKeySpecException("kaboom"));
         replay(factory);
 
-        AuthorizedKeysPublicKeyController controller =
-            new AuthorizedKeysPublicKeyController(new StubDataSource(TYPE, "aaa", "dummy-comment"));
-
-        assertTrue(isEmpty(controller.getMatchers(newArrayList(factory))));
+        assertTrue(
+            isEmpty(controller.getMatchers(new StubDataSource(TYPE, "aaa", "dummy-comment"), newArrayList(factory))));
 
         verify(factory);
     }
 
     @Test
     public void testReturnsEmptyWhenNoFactoryMatchesType() {
-        AuthorizedKeysPublicKeyController controller =
-            new AuthorizedKeysPublicKeyController(new StubDataSource("no-match", "aaa", "comment"));
-
-        assertTrue(isEmpty(controller.getMatchers(loaders)));
+        assertTrue(isEmpty(controller.getMatchers(new StubDataSource("no-match", "aaa", "comment"), loaders)));
     }
 
     @Test
     public void testReturnsMatcherWhenMatchesFactory() {
-        AuthorizedKeysPublicKeyController controller;
-        controller = new AuthorizedKeysPublicKeyController(new StubDataSource(TYPE, "aaa", "comment"));
-
-        List<PublicKeyMatcher> list = newArrayList(controller.getMatchers(loaders));
+        List<PublicKeyMatcher> list =
+            newArrayList(controller.getMatchers(new StubDataSource(TYPE, "aaa", "comment"), loaders));
         assertEquals(1, list.size());
         FakePublicKeyMatcher matcher = (FakePublicKeyMatcher) list.get(0);
         assertArrayEquals(BASE_64.decode("aaa"), matcher.getData());

@@ -57,10 +57,10 @@ public final class DemoMain {
             // read keys from an ssh authorized_keys file
             AuthorizedKeyDataSource dataSource = new InputStreamAuthorizedKeyDataSource(
                 new InputStreamSupplier(authorizedKeys));
-            PublicKeyMatcherController controller = new AuthorizedKeysPublicKeyController(dataSource);
+            PublicKeyMatcherController controller = new AuthorizedKeysPublicKeyController();
 
             // configure the authenticator with the above
-            authenticator = new AuthorizedKeysPublickeyAuthenticator(factories, controller);
+            authenticator = new AuthorizedKeysPublickeyAuthenticator(factories, dataSource, controller);
         }
 
         startSshServer(injector, authenticator);

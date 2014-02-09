@@ -29,18 +29,20 @@ public final class AuthorizedKeysPublickeyAuthenticator implements PublickeyAuth
     private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeysPublickeyAuthenticator.class);
 
     private final Iterable<PublicKeyMatcherFactory> matcherFactories;
+    private final AuthorizedKeyDataSource authorizedKeyDataSource;
     private final PublicKeyMatcherController controller;
 
     public AuthorizedKeysPublickeyAuthenticator(Iterable<PublicKeyMatcherFactory> matcherFactories,
-        PublicKeyMatcherController controller) {
+        AuthorizedKeyDataSource authorizedKeyDataSource, PublicKeyMatcherController controller) {
         this.matcherFactories = matcherFactories;
+        this.authorizedKeyDataSource = authorizedKeyDataSource;
         this.controller = controller;
     }
 
     @Override
     public boolean authenticate(String username, final PublicKey key, ServerSession session) {
 
-        Iterable<PublicKeyMatcher> matchers = controller.getMatchers(matcherFactories);
+        Iterable<PublicKeyMatcher> matchers = controller.getMatchers(authorizedKeyDataSource, matcherFactories);
 
         PublicKeyMatcher matcher =
             getFirst(filter(matchers, new MatcherMatchPredicate(key)), null);
