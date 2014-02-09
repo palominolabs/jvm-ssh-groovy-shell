@@ -22,13 +22,13 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public final class AuthorizedKeysPublicKeyControllerTest {
+public final class DefaultPublicKeyMatcherFactoryControllerTest {
 
     private static final BaseEncoding BASE_64 = BaseEncoding.base64();
 
     private final ArrayList<PublicKeyMatcherFactory> loaders =
         Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory());
-    private final AuthorizedKeysPublicKeyController controller = new AuthorizedKeysPublicKeyController();
+    private final DefaultPublicKeyMatcherFactoryController controller = new DefaultPublicKeyMatcherFactoryController();
 
     @Test
     public void testReturnsEmptyWhenDataSourceThrowsException() throws IOException {

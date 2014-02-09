@@ -16,9 +16,9 @@ import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Lists.newArrayList;
 
 @Immutable
-public final class AuthorizedKeysPublicKeyController implements PublicKeyMatcherController {
+public final class DefaultPublicKeyMatcherFactoryController implements PublicKeyMatcherFactoryController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeysPublicKeyController.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultPublicKeyMatcherFactoryController.class);
 
     @Nonnull
     @Override

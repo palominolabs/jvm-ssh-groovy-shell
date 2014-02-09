@@ -12,10 +12,10 @@ import com.palominolabs.http.server.HttpServerWrapperConfig;
 import com.palominolabs.http.server.HttpServerWrapperFactory;
 import com.palominolabs.http.server.HttpServerWrapperModule;
 import com.palominolabs.ssh.auth.publickey.AuthorizedKeyDataSource;
-import com.palominolabs.ssh.auth.publickey.AuthorizedKeysPublicKeyController;
+import com.palominolabs.ssh.auth.publickey.DefaultPublicKeyMatcherFactoryController;
 import com.palominolabs.ssh.auth.publickey.AuthorizedKeysPublickeyAuthenticator;
 import com.palominolabs.ssh.auth.publickey.InputStreamAuthorizedKeyDataSource;
-import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherController;
+import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactoryController;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.dsa.DsaPublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.rsa.RsaPublicKeyMatcherFactory;
@@ -57,7 +57,7 @@ public final class DemoMain {
             // read keys from an ssh authorized_keys file
             AuthorizedKeyDataSource dataSource = new InputStreamAuthorizedKeyDataSource(
                 new InputStreamSupplier(authorizedKeys));
-            PublicKeyMatcherController controller = new AuthorizedKeysPublicKeyController();
+            PublicKeyMatcherFactoryController controller = new DefaultPublicKeyMatcherFactoryController();
 
             // configure the authenticator with the above
             authenticator = new AuthorizedKeysPublickeyAuthenticator(factories, dataSource, controller);

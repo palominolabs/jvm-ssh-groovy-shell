@@ -19,7 +19,7 @@ public final class AuthorizedKeysPublickeyAuthenticatorTest {
     @Test
     public void testRejectsWhenNoMatchersLoaded() {
 
-        PublicKeyMatcherController controller = createStrictMock(PublicKeyMatcherController.class);
+        PublicKeyMatcherFactoryController controller = createStrictMock(PublicKeyMatcherFactoryController.class);
         AuthorizedKeyDataSource dataSource = createStrictMock(AuthorizedKeyDataSource.class);
 
         expect(controller.getMatchers(dataSource, loaders)).andReturn(Lists.<PublicKeyMatcher>newArrayList());
@@ -34,7 +34,7 @@ public final class AuthorizedKeysPublickeyAuthenticatorTest {
 
     @Test
     public void testAcceptsWhenOneMatcherMatches() {
-        PublicKeyMatcherController controller = createStrictMock(PublicKeyMatcherController.class);
+        PublicKeyMatcherFactoryController controller = createStrictMock(PublicKeyMatcherFactoryController.class);
         AuthorizedKeyDataSource dataSource = createStrictMock(AuthorizedKeyDataSource.class);
 
         expect(controller.getMatchers(dataSource, loaders))
@@ -52,7 +52,7 @@ public final class AuthorizedKeysPublickeyAuthenticatorTest {
 
     @Test
     public void testAcceptsWhenOnlyMatcherDoesntMatch() {
-        PublicKeyMatcherController controller = createStrictMock(PublicKeyMatcherController.class);
+        PublicKeyMatcherFactoryController controller = createStrictMock(PublicKeyMatcherFactoryController.class);
         AuthorizedKeyDataSource dataSource = createStrictMock(AuthorizedKeyDataSource.class);
 
         expect(controller.getMatchers(dataSource, loaders))
