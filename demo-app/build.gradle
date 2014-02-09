@@ -7,11 +7,11 @@ mainClassName = 'com.palominolabs.groovy.ssh.demo.DemoMain'
 dependencies {
   compile 'com.palominolabs.http:jetty-http-server-wrapper:1.0.3'
 
-  runtime "org.slf4j:slf4j-simple:$depVersions.slf4j"
+  runtime "ch.qos.logback:logback-classic:1.1.1"
   runtime "org.slf4j:log4j-over-slf4j:$depVersions.slf4j"
   runtime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
-  testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
-  
+  runtime "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
+
   compile project(':groovy-shell-ssh')
   compile project(':authorized-keys-ssh-authenticator')
 }
