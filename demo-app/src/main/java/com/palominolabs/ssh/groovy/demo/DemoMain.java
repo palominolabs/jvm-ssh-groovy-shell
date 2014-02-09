@@ -1,4 +1,4 @@
-package com.palominolabs.groovy.ssh.demo;
+package com.palominolabs.ssh.groovy.demo;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;

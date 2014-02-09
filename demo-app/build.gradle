@@ -2,7 +2,7 @@ apply plugin: 'application'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 
-mainClassName = 'com.palominolabs.groovy.ssh.demo.DemoMain'
+mainClassName = 'com.palominolabs.ssh.groovy.demo.DemoMain'
 
 dependencies {
   compile 'com.palominolabs.http:jetty-http-server-wrapper:1.0.3'

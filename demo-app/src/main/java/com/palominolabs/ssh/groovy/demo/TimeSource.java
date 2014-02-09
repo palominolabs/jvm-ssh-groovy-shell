@@ -1,4 +1,4 @@
-package com.palominolabs.groovy.ssh.demo;
+package com.palominolabs.ssh.groovy.demo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

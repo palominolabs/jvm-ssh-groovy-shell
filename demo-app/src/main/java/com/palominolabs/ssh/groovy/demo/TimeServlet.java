@@ -1,4 +1,4 @@
-package com.palominolabs.groovy.ssh.demo;
+package com.palominolabs.ssh.groovy.demo;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
