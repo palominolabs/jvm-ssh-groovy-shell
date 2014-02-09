@@ -46,7 +46,7 @@ And now, to check that it worked:
 
 Sure enough, the second timestamp is 30 seconds fast.
 
-Obviously this is a contrived example, but the flexbility and power should be clear.
+Obviously this is a contrived example, but it should be clear how useful it is to be able to interactively execute arbitrary code inside a running JVM.
 
 # Security
 
