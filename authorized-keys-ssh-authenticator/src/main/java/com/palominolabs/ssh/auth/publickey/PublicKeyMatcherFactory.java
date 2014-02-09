@@ -11,7 +11,7 @@ import java.security.spec.InvalidKeySpecException;
 public interface PublicKeyMatcherFactory {
 
     /**
-     * @return the key type that this parser can handle (e.g. "ssh-rsa").
+     * @return the key type that this factory can handle (e.g. "ssh-rsa").
      */
     @Nonnull
     String getKeyType();
