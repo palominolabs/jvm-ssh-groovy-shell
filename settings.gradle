@@ -1,3 +1,3 @@
 rootProject.name = 'ssh-groovy-shell'
 
-include 'ssh-groovy-shell', 'demo-app', 'authorized-keys-ssh-authenticator'
+include 'groovy-shell-command', 'demo-app', 'authorized-keys-ssh-authenticator'
