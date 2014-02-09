@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -47,7 +48,7 @@ public final class DemoMain {
         if (authKeyProp != null) {
 
             // user provided an authorized_keys path
-            final File authorizedKeys = new File(authKeyProp);
+            final File authorizedKeys = Paths.get(authKeyProp).toAbsolutePath().toFile();
             if (!authorizedKeys.canRead()) {
                 System.err.println("Can't read " + authorizedKeys);
                 System.exit(1);
