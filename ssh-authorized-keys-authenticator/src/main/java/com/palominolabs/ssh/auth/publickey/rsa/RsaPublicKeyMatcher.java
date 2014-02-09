@@ -31,10 +31,12 @@ class RsaPublicKeyMatcher implements PublicKeyMatcher {
 
         // this does require allocation to get the byte arrays, but it allows us to use the timing-attack-resistant
         // comparison from MessageDigest
-        return MessageDigest
-            .isEqual(authorizedKey.getPublicExponent().toByteArray(), other.getPublicExponent().toByteArray())
-            && MessageDigest.isEqual(authorizedKey.getModulus().toByteArray(), other.getModulus().toByteArray())
-            && Objects.equals(authorizedKey.getAlgorithm(), other.getAlgorithm());
+        boolean ok = MessageDigest
+            .isEqual(authorizedKey.getPublicExponent().toByteArray(), other.getPublicExponent().toByteArray());
+        ok &= MessageDigest.isEqual(authorizedKey.getModulus().toByteArray(), other.getModulus().toByteArray());
+        ok &= Objects.equals(authorizedKey.getAlgorithm(), other.getAlgorithm());
+
+        return ok;
     }
 
     @Nonnull
