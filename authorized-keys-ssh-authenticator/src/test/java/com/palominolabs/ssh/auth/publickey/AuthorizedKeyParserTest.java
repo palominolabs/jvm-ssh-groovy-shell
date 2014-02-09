@@ -1,6 +1,5 @@
 package com.palominolabs.ssh.auth.publickey;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,15 +21,12 @@ public final class AuthorizedKeyParserTest {
     public void setUp() {
         authorizedKeyParser =
             new AuthorizedKeyParser(
-                Lists.<PublicKeyMatcherFactory>newArrayList(new FakePublicKeyMatcherFactory()));
+            );
     }
 
     @Test
     public void testParseValidLine() throws IOException {
-        ByteArrayInputStream is =
-            new ByteArrayInputStream("dummy aaa comment1\ndummy bbb comment2".getBytes(UTF_8));
-
-        List<PublicKeyMatcher> keys = newArrayList(authorizedKeyParser.parse(is));
+        List<AuthorizedKey> keys = getKeys("dummy aaa comment1\ndummy bbb comment2");
 
         assertEquals(2, keys.size());
 
@@ -40,10 +36,7 @@ public final class AuthorizedKeyParserTest {
 
     @Test
     public void testSkipsInvalidLines() throws IOException {
-        ByteArrayInputStream is =
-            new ByteArrayInputStream("asdf\ndummy bbb comment2\nfoo".getBytes(UTF_8));
-
-        List<PublicKeyMatcher> keys = newArrayList(authorizedKeyParser.parse(is));
+        List<AuthorizedKey> keys = getKeys("asdf\ndummy bbb comment2\nfoo");
 
         assertEquals(1, keys.size());
 
@@ -52,32 +45,23 @@ public final class AuthorizedKeyParserTest {
 
     @Test
     public void testSkipsCommentLines() throws IOException {
-        ByteArrayInputStream is =
-            new ByteArrayInputStream("# foo\ndummy bbb comment2".getBytes(UTF_8));
-
-        List<PublicKeyMatcher> keys = newArrayList(authorizedKeyParser.parse(is));
+        List<AuthorizedKey> keys = getKeys("# foo\ndummy bbb comment2");
 
         assertEquals(1, keys.size());
 
         assertKey(keys.get(0), "bbb", "comment2");
     }
 
-    @Test
-    public void testSkipsUnknownTypeLines() throws IOException {
-        ByteArrayInputStream is =
-            new ByteArrayInputStream("dummy2 aaa comment1\ndummy bbb comment2".getBytes(UTF_8));
-
-        List<PublicKeyMatcher> keys = newArrayList(authorizedKeyParser.parse(is));
-
-        assertEquals(1, keys.size());
-
-        assertKey(keys.get(0), "bbb", "comment2");
+    private void assertKey(AuthorizedKey key, String data, String comment) {
+        assertEquals("dummy", key.getType());
+        assertArrayEquals(BaseEncoding.base64().decode(data), key.getData());
+        assertEquals(comment, key.getComment());
     }
 
-    private void assertKey(PublicKeyMatcher k0, String data, String comment) {
-        BaseEncoding b64 = BaseEncoding.base64();
-        assertArrayEquals(b64.decode(data), ((FakePublicKeyMatcher) k0).getData());
+    private List<AuthorizedKey> getKeys(String content) throws IOException {
+        ByteArrayInputStream is =
+            new ByteArrayInputStream(content.getBytes(UTF_8));
 
-        assertEquals(comment, k0.getComment());
+        return newArrayList(authorizedKeyParser.parse(is));
     }
 }

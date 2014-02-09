@@ -1,25 +1,19 @@
 package com.palominolabs.ssh.auth.publickey;
 
-import com.google.common.base.Predicate;
 import com.google.common.io.BaseEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.getFirst;
 
 @Immutable
 final class AuthorizedKeyParser {
@@ -28,24 +22,18 @@ final class AuthorizedKeyParser {
 
     private static final Pattern KEY_PATTERN = Pattern.compile("^([-a-z\\d]+) ([a-zA-Z0-9/+=]+) ([^ ]+)$");
 
-    private final Iterable<PublicKeyMatcherFactory> matcherFactories;
-
-    AuthorizedKeyParser(Iterable<PublicKeyMatcherFactory> matcherFactories) {
-        this.matcherFactories = matcherFactories;
-    }
-
     /**
-     * Load key matchers from an authorized_keys input stream.
+     * Load key data from an authorized_keys input stream.
      *
      * @param keyData authorized_keys data
-     * @return a list of matchers
+     * @return a list of keys
      * @throws IOException if key data can't be read
      */
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Nonnull
-    Iterable<PublicKeyMatcher> parse(@Nonnull InputStream keyData) throws IOException {
+    Iterable<AuthorizedKey> parse(@Nonnull InputStream keyData) throws IOException {
 
-        List<PublicKeyMatcher> matchers = new ArrayList<>();
+        List<AuthorizedKey> keys = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(keyData, StandardCharsets.UTF_8.name())) {
             int lineNum = 0;
@@ -72,25 +60,11 @@ final class AuthorizedKeyParser {
                     continue;
                 }
 
-                final String type = matcher.group(1);
-
-                PublicKeyMatcherFactory factory = getFirst(filter(matcherFactories, new KeyTypePredicate(type)), null);
-
-                if (factory == null) {
-                    logger.warn("Line " + lineNum + ": Invalid key type: <" + type + ">");
-                    continue;
-                }
-
-                String keyBase64 = matcher.group(2);
+                String type = matcher.group(1);
+                byte[] data = BaseEncoding.base64().decode(matcher.group(2));
                 String comment = matcher.group(3);
 
-                try {
-                    matchers.add(factory.buildMatcher(BaseEncoding.base64().decode(keyBase64), comment));
-                } catch (InvalidKeySpecException e) {
-                    logger.warn("Could not parse key data", e);
-                }
-
-                logger.debug("Parsed key with comment <" + comment + ">");
+                keys.add(new AuthorizedKey(type, data, comment));
             }
 
             if (scanner.ioException() != null) {
@@ -98,19 +72,6 @@ final class AuthorizedKeyParser {
             }
         }
 
-        return matchers;
-    }
-
-    private static class KeyTypePredicate implements Predicate<PublicKeyMatcherFactory> {
-        private final String type;
-
-        private KeyTypePredicate(String type) {
-            this.type = type;
-        }
-
-        @Override
-        public boolean apply(@Nullable PublicKeyMatcherFactory input) {
-            return input.getKeyType().equals(type);
-        }
+        return keys;
     }
 }
