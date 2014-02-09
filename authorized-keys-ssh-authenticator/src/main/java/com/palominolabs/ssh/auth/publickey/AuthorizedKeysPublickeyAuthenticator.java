@@ -17,12 +17,7 @@ import static com.google.common.collect.Iterables.getFirst;
  * format.
  *
  * Technically, only a subset of the format is supported. The full format allows for options to be specified for each
- * key line, but this is both very rare and not always applicable to this demo, so any such lines will not be processed.
- * This class only supports lines that include exactly the following, separated by a single space:
- *
- * key-type key-bytes-in-base64 comment
- *
- * This class is thread-safe if its provided Supplier is.
+ * key line, but this is both very rare and not always applicable to this, so any such lines will not be processed.
  */
 public final class AuthorizedKeysPublickeyAuthenticator implements PublickeyAuthenticator {
 
