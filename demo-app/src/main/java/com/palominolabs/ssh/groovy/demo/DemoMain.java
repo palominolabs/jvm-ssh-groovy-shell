@@ -12,11 +12,11 @@ import com.palominolabs.http.server.HttpServerWrapperConfig;
 import com.palominolabs.http.server.HttpServerWrapperFactory;
 import com.palominolabs.http.server.HttpServerWrapperModule;
 import com.palominolabs.ssh.auth.publickey.AuthorizedKeyDataSource;
-import com.palominolabs.ssh.auth.publickey.DefaultPublicKeyMatcherFactoryController;
 import com.palominolabs.ssh.auth.publickey.AuthorizedKeysPublickeyAuthenticator;
+import com.palominolabs.ssh.auth.publickey.DefaultPublicKeyMatcherFactoryController;
 import com.palominolabs.ssh.auth.publickey.InputStreamAuthorizedKeyDataSource;
-import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactoryController;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactory;
+import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactoryController;
 import com.palominolabs.ssh.auth.publickey.dsa.DsaPublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.rsa.RsaPublicKeyMatcherFactory;
 import com.palominolabs.ssh.groovy.GroovyShellCommandFactory;
@@ -46,9 +46,11 @@ public final class DemoMain {
         startHttpServer(injector);
 
         PublickeyAuthenticator authenticator = null;
-        if (args.length == 1) {
+        String authKeyProp = System.getProperty("DEMO_SSH_AUTHORIZED_KEYS");
+        if (authKeyProp != null) {
+
             // user provided an authorized_keys path
-            final File authorizedKeys = new File(args[0]);
+            final File authorizedKeys = new File(authKeyProp);
 
             // we want to read RSA and DSA keys
             List<PublicKeyMatcherFactory> factories =
