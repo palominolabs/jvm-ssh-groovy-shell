@@ -5,10 +5,12 @@ import java.security.spec.InvalidKeySpecException;
 
 class FakePublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
+    static final String TYPE = "dummy";
+
     @Nonnull
     @Override
     public String getKeyType() {
-        return "dummy";
+        return TYPE;
     }
 
     @Nonnull

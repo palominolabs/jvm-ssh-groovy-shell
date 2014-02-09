@@ -1,28 +1,22 @@
 package com.palominolabs.ssh.auth.publickey;
 
+import com.google.common.base.Suppliers;
+import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Iterables.isEmpty;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public final class AuthorizedKeyParserTest {
-
-    private AuthorizedKeyParser authorizedKeyParser;
-
-    @Before
-    public void setUp() {
-        authorizedKeyParser =
-            new AuthorizedKeyParser(
-            );
-    }
+public final class InputStreamAuthorizedKeyDataSourceTest {
 
     @Test
     public void testParseValidLine() throws IOException {
@@ -52,6 +46,14 @@ public final class AuthorizedKeyParserTest {
         assertKey(keys.get(0), "bbb", "comment2");
     }
 
+    @Test
+    public void testReturnsEmptyWhenCantGetStream() throws IOException {
+        InputStreamAuthorizedKeyDataSource ds =
+            new InputStreamAuthorizedKeyDataSource(Suppliers.<InputStream>ofInstance(null));
+
+        assertTrue(isEmpty(ds.loadKeys()));
+    }
+
     private void assertKey(AuthorizedKey key, String data, String comment) {
         assertEquals("dummy", key.getType());
         assertArrayEquals(BaseEncoding.base64().decode(data), key.getData());
@@ -62,6 +64,7 @@ public final class AuthorizedKeyParserTest {
         ByteArrayInputStream is =
             new ByteArrayInputStream(content.getBytes(UTF_8));
 
-        return newArrayList(authorizedKeyParser.parse(is));
+        return Lists
+            .newArrayList(new InputStreamAuthorizedKeyDataSource(Suppliers.<InputStream>ofInstance(is)).loadKeys());
     }
 }

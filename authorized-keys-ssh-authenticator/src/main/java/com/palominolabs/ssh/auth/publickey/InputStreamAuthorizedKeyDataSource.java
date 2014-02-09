@@ -1,5 +1,7 @@
 package com.palominolabs.ssh.auth.publickey;
 
+import com.google.common.base.Supplier;
+import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +18,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Immutable
-final class AuthorizedKeyParser {
+public final class InputStreamAuthorizedKeyDataSource implements AuthorizedKeyDataSource {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeyParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(InputStreamAuthorizedKeyDataSource.class);
 
     private static final Pattern KEY_PATTERN = Pattern.compile("^([-a-z\\d]+) ([a-zA-Z0-9/+=]+) ([^ ]+)$");
+
+    private final Supplier<InputStream> inputSupplier;
+
+    /**
+     * @param inputSupplier supplier of input streams to the authorized key source. Must be thread safe.
+     */
+    public InputStreamAuthorizedKeyDataSource(Supplier<InputStream> inputSupplier) {
+        this.inputSupplier = inputSupplier;
+    }
+
+    @Nonnull
+    @Override
+    public Iterable<AuthorizedKey> loadKeys() throws IOException {
+
+        InputStream inputStream = inputSupplier.get();
+        if (inputStream == null) {
+            logger.warn("Could not load key data stream; rejecting");
+            return Lists.newArrayList();
+        }
+
+        return parse(inputStream);
+    }
 
     /**
      * Load key data from an authorized_keys input stream.
@@ -31,7 +55,7 @@ final class AuthorizedKeyParser {
      */
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Nonnull
-    Iterable<AuthorizedKey> parse(@Nonnull InputStream keyData) throws IOException {
+    private Iterable<AuthorizedKey> parse(@Nonnull InputStream keyData) throws IOException {
 
         List<AuthorizedKey> keys = new ArrayList<>();
 

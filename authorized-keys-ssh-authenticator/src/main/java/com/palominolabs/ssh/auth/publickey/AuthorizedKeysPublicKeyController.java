@@ -1,14 +1,12 @@
 package com.palominolabs.ssh.auth.publickey;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
@@ -20,32 +18,23 @@ import static com.google.common.collect.Lists.newArrayList;
  * Uses an InputStream to an OpenSSH-format authorized_keys file. The file is re-read every time, hence the use of a
  * Supplier. This allows changes to the file to take effect immediately without requiring a restart.
  */
-public final class AuthorizedKeysPublicKeyDataSource implements PublicKeyDataSource {
+public final class AuthorizedKeysPublicKeyController implements PublicKeyMatcherController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeysPublicKeyDataSource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizedKeysPublicKeyController.class);
 
-    private final Supplier<InputStream> inputSupplier;
+    private final AuthorizedKeyDataSource dataSource;
 
-    public AuthorizedKeysPublicKeyDataSource(Supplier<InputStream> inputSupplier) {
-        this.inputSupplier = inputSupplier;
+    public AuthorizedKeysPublicKeyController(AuthorizedKeyDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public Iterable<PublicKeyMatcher> getMatchers(@Nonnull Iterable<PublicKeyMatcherFactory> factories) {
-        // TODO refactor so that this logic is shared since it's dependent only on an Iterable<AuthorizedKey>
-
-        AuthorizedKeyParser parser = new AuthorizedKeyParser();
-
-        InputStream inputStream = inputSupplier.get();
-        if (inputStream == null) {
-            logger.warn("Could not load key data stream; rejecting");
-            return newArrayList();
-        }
 
         Iterable<AuthorizedKey> keys;
         try {
-            keys = parser.parse(inputStream);
+            keys = dataSource.loadKeys();
         } catch (IOException e) {
             logger.warn("Could not read authorized keys", e);
             return newArrayList();
