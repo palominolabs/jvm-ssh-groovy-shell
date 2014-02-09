@@ -1,5 +1,6 @@
 package com.palominolabs.ssh.auth.publickey.dsa;
 
+import com.palominolabs.ssh.auth.publickey.AuthorizedKey;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.rfc4253.DsaSshPublicKeyParser;
@@ -21,7 +22,7 @@ public final class DsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory
 
     @Nonnull
     @Override
-    public PublicKeyMatcher buildMatcher(byte[] data, String comment) throws InvalidKeySpecException {
-        return new DsaPublicKeyMatcher(new DsaSshPublicKeyParser(data).getKey(), comment);
+    public PublicKeyMatcher buildMatcher(AuthorizedKey key) throws InvalidKeySpecException {
+        return new DsaPublicKeyMatcher(new DsaSshPublicKeyParser(key.getData()).getKey(), key.getComment());
     }
 }

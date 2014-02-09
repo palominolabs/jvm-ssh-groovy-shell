@@ -1,5 +1,6 @@
 package com.palominolabs.ssh.auth.publickey.rsa;
 
+import com.palominolabs.ssh.auth.publickey.AuthorizedKey;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcherFactory;
 import com.palominolabs.ssh.auth.publickey.rfc4253.RsaSshPublicKeyParser;
@@ -22,7 +23,7 @@ public class RsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
     @Nonnull
     @Override
-    public PublicKeyMatcher buildMatcher(byte[] data, String comment) throws InvalidKeySpecException {
-        return new RsaPublicKeyMatcher(new RsaSshPublicKeyParser(data).getKey(), comment);
+    public PublicKeyMatcher buildMatcher(AuthorizedKey key) throws InvalidKeySpecException {
+        return new RsaPublicKeyMatcher(new RsaSshPublicKeyParser(key.getData()).getKey(), key.getComment());
     }
 }

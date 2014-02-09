@@ -62,8 +62,7 @@ public final class AuthorizedKeysPublicKeyDataSource implements PublicKeyDataSou
             }
 
             try {
-                // TODO refactor factory to take AuthorizedKey
-                matchers.add(factory.buildMatcher(key.getData(), key.getComment()));
+                matchers.add(factory.buildMatcher(key));
             } catch (InvalidKeySpecException e) {
                 logger.warn("Could not parse key data", e);
             }

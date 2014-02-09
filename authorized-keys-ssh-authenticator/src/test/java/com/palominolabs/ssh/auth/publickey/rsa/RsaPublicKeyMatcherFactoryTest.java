@@ -2,6 +2,7 @@ package com.palominolabs.ssh.auth.publickey.rsa;
 
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.Resources;
+import com.palominolabs.ssh.auth.publickey.AuthorizedKey;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 import org.junit.Test;
 
@@ -34,6 +35,7 @@ public final class RsaPublicKeyMatcherFactoryTest {
 
         byte[] bytes = BaseEncoding.base64().decode(base64);
 
-        return (RsaPublicKeyMatcher) new RsaPublicKeyMatcherFactory().buildMatcher(bytes, chunks[2].trim());
+        return (RsaPublicKeyMatcher) new RsaPublicKeyMatcherFactory()
+            .buildMatcher(new AuthorizedKey("type", bytes, chunks[2].trim()));
     }
 }

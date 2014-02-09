@@ -2,6 +2,7 @@ package com.palominolabs.ssh.auth.publickey.dsa;
 
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.Resources;
+import com.palominolabs.ssh.auth.publickey.AuthorizedKey;
 import com.palominolabs.ssh.auth.publickey.PublicKeyMatcher;
 import org.junit.Test;
 
@@ -32,6 +33,7 @@ public final class DsaPublicKeyMatcherFactoryTest {
 
         byte[] bytes = BaseEncoding.base64().decode(chunks[1]);
 
-        return (DsaPublicKeyMatcher) new DsaPublicKeyMatcherFactory().buildMatcher(bytes, chunks[2].trim());
+        return (DsaPublicKeyMatcher) new DsaPublicKeyMatcherFactory()
+            .buildMatcher(new AuthorizedKey("type", bytes, chunks[2].trim()));
     }
 }

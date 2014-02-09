@@ -17,9 +17,7 @@ import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.easymock.EasyMock.anyInt;
-import static org.easymock.EasyMock.aryEq;
 import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
@@ -71,7 +69,7 @@ public final class AuthorizedKeysPublicKeyDataSourceTest {
     public void testReturnsEmptyWhenFactoryThrowsException() throws InvalidKeySpecException {
         PublicKeyMatcherFactory factory = createStrictMock(PublicKeyMatcherFactory.class);
         expect(factory.getKeyType()).andReturn("dummy");
-        expect(factory.buildMatcher(aryEq(BaseEncoding.base64().decode("aaa")), eq("dummy-comment")))
+        expect(factory.buildMatcher(EasyMock.<AuthorizedKey>anyObject()))
             .andThrow(new InvalidKeySpecException("kaboom"));
         replay(factory);
 

@@ -1,6 +1,7 @@
 package com.palominolabs.ssh.auth.publickey;
 
 import javax.annotation.Nonnull;
+import java.security.spec.InvalidKeySpecException;
 
 class FakePublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
@@ -12,7 +13,7 @@ class FakePublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
     @Nonnull
     @Override
-    public PublicKeyMatcher buildMatcher(byte[] data, String comment) {
-        return new FakePublicKeyMatcher(data, comment, false);
+    public PublicKeyMatcher buildMatcher(AuthorizedKey key) throws InvalidKeySpecException {
+        return new FakePublicKeyMatcher(key.getData(), key.getComment(), false);
     }
 }
