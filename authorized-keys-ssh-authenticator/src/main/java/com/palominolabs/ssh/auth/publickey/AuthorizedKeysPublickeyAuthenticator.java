@@ -46,11 +46,13 @@ public final class AuthorizedKeysPublickeyAuthenticator implements PublickeyAuth
             getFirst(filter(matchers, new MatcherMatchPredicate(key)), null);
 
         if (matcher != null) {
-            logger.info("Matched key with comment " + matcher.getComment());
+            logger.debug(
+                "Authenticated user <" + username + "> against authorized key with comment <" + matcher.getComment() +
+                    ">");
             return true;
         }
 
-        logger.info("Did not match any keys");
+        logger.debug("User <" + username + "> did not match any keys");
         return false;
     }
 

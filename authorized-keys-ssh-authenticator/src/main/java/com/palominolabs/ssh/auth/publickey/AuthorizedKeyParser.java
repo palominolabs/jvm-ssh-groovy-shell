@@ -89,6 +89,8 @@ final class AuthorizedKeyParser {
                 } catch (InvalidKeySpecException e) {
                     logger.warn("Could not parse key data", e);
                 }
+
+                logger.debug("Parsed key with comment <" + comment + ">");
             }
 
             if (scanner.ioException() != null) {
