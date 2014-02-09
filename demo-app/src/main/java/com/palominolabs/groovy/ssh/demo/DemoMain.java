@@ -1,6 +1,7 @@
 package com.palominolabs.groovy.ssh.demo;
 
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -19,9 +20,7 @@ import com.palominolabs.ssh.auth.publickey.rsa.RsaPublicKeyMatcherFactory;
 import com.palominolabs.ssh.groovy.GroovyShellCommandFactory;
 import groovy.lang.Binding;
 import org.apache.sshd.SshServer;
-import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.server.PublickeyAuthenticator;
-import org.apache.sshd.server.UserAuth;
 import org.apache.sshd.server.auth.UserAuthNone;
 import org.apache.sshd.server.auth.UserAuthPublicKey;
 import org.apache.sshd.server.keyprovider.PEMGeneratorHostKeyProvider;
@@ -107,9 +106,9 @@ public final class DemoMain {
 
         if (authenticator == null) {
             // allow all users
-            sshd.setUserAuthFactories(Lists.<NamedFactory<UserAuth>>newArrayList(new UserAuthNone.Factory()));
+            sshd.setUserAuthFactories(ImmutableList.of(new UserAuthNone.Factory()));
         } else {
-            sshd.setUserAuthFactories(Lists.<NamedFactory<UserAuth>>newArrayList(new UserAuthPublicKey.Factory()));
+            sshd.setUserAuthFactories(ImmutableList.of(new UserAuthPublicKey.Factory()));
             sshd.setPublickeyAuthenticator(authenticator);
         }
 
