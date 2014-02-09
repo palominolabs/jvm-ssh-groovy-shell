@@ -50,7 +50,7 @@ Obviously this is a contrived example, but the flexbility and power should be cl
 
 # Security
 
-In the demo above, you didn't have to provide a password because the demo app defaults to allowing all connections. However, that's not realistic for real-world use, so there's also a `PublickeyAuthenticator` implementation provided ([`AuthorizedKeysPublickeyAuthenticator`[(https://github.com/palominolabs/ssh-groovy-shell/blob/master/authorized-keys-ssh-authenticator/src/main/java/com/palominolabs/ssh/auth/publickey/AuthorizedKeysPublickeyAuthenticator.java))  that uses ssh's `authorized_keys` format to define the public keys to allow. Currently, it supports RSA and DSA keys.
+In the demo above, you didn't have to provide a password because the demo app defaults to allowing all connections. However, that's not realistic for real-world use, so there's also a `PublickeyAuthenticator` implementation provided (`[AuthorizedKeysPublickeyAuthenticator[(https://github.com/palominolabs/ssh-groovy-shell/blob/master/authorized-keys-ssh-authenticator/src/main/java/com/palominolabs/ssh/auth/publickey/AuthorizedKeysPublickeyAuthenticator.java)`) that uses ssh's `authorized_keys` format to define the public keys to allow. Currently, it supports RSA and DSA keys.
 
 The demo app supports public key authentication; you simply need to tell it what authorized_keys file to use. If you already have ssh keys set up, you can point the demo app at your current public key to quickly test it.
 
