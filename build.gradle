@@ -2,7 +2,7 @@ subprojects {
   apply plugin: 'java'
   apply plugin: 'cobertura'
 
-  group = 'com.palominolabs.groovy'
+  group = 'com.palominolabs.ssh'
   version = '1.0.0-SNAPSHOT'
 
   repositories {
