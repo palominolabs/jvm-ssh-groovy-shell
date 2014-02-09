@@ -8,6 +8,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * Builds PublicKeyMatcher instances for DSA keys (type "ssh-dss").
+ */
 @Immutable
 public final class DsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory {
     @Nonnull

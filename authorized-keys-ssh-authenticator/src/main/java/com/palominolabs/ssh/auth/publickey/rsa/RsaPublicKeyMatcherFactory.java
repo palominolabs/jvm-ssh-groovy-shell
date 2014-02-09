@@ -8,6 +8,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * Builds PublicKeyMatcher instances for RSA keys (type "ssh-rsa").
+ */
 @Immutable
 public class RsaPublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
