@@ -37,6 +37,8 @@ configure(subprojects.findAll({ it.name != 'demo-app' })) {
   apply plugin: 'signing'
   apply plugin: 'cobertura'
 
+  sourceCompatibility = JavaVersion.VERSION_1_7
+
   ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
   task sourcesJar(type: Jar, dependsOn: classes) {
