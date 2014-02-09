@@ -13,6 +13,7 @@ import java.util.List;
 
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.palominolabs.ssh.auth.publickey.FakePublicKeyMatcherFactory.TYPE;
 import static org.easymock.EasyMock.createStrictMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -46,13 +47,13 @@ public final class AuthorizedKeysPublicKeyControllerTest {
     @Test
     public void testReturnsEmptyWhenFactoryThrowsException() throws InvalidKeySpecException {
         PublicKeyMatcherFactory factory = createStrictMock(PublicKeyMatcherFactory.class);
-        expect(factory.getKeyType()).andReturn("dummy");
+        expect(factory.getKeyType()).andReturn(TYPE);
         expect(factory.buildMatcher(EasyMock.<AuthorizedKey>anyObject()))
             .andThrow(new InvalidKeySpecException("kaboom"));
         replay(factory);
 
         AuthorizedKeysPublicKeyController controller =
-            new AuthorizedKeysPublicKeyController(new StubDataSource("dummy", "aaa", "dummy-comment"));
+            new AuthorizedKeysPublicKeyController(new StubDataSource(TYPE, "aaa", "dummy-comment"));
 
         assertTrue(isEmpty(controller.getMatchers(newArrayList(factory))));
 
@@ -70,7 +71,7 @@ public final class AuthorizedKeysPublicKeyControllerTest {
     @Test
     public void testReturnsMatcherWhenMatchesFactory() {
         AuthorizedKeysPublicKeyController controller;
-        controller = new AuthorizedKeysPublicKeyController(new StubDataSource("dummy", "aaa", "comment"));
+        controller = new AuthorizedKeysPublicKeyController(new StubDataSource(TYPE, "aaa", "comment"));
 
         List<PublicKeyMatcher> list = newArrayList(controller.getMatchers(loaders));
         assertEquals(1, list.size());

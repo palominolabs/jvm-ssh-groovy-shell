@@ -20,7 +20,7 @@ public final class InputStreamAuthorizedKeyDataSourceTest {
 
     @Test
     public void testParseValidLine() throws IOException {
-        List<AuthorizedKey> keys = getKeys("dummy aaa comment1\ndummy bbb comment2");
+        List<AuthorizedKey> keys = getKeys("fake aaa comment1\nfake bbb comment2");
 
         assertEquals(2, keys.size());
 
@@ -30,7 +30,7 @@ public final class InputStreamAuthorizedKeyDataSourceTest {
 
     @Test
     public void testSkipsInvalidLines() throws IOException {
-        List<AuthorizedKey> keys = getKeys("asdf\ndummy bbb comment2\nfoo");
+        List<AuthorizedKey> keys = getKeys("asdf\nfake bbb comment2\nfoo");
 
         assertEquals(1, keys.size());
 
@@ -39,7 +39,7 @@ public final class InputStreamAuthorizedKeyDataSourceTest {
 
     @Test
     public void testSkipsCommentLines() throws IOException {
-        List<AuthorizedKey> keys = getKeys("# foo\ndummy bbb comment2");
+        List<AuthorizedKey> keys = getKeys("# foo\nfake bbb comment2");
 
         assertEquals(1, keys.size());
 
@@ -55,7 +55,7 @@ public final class InputStreamAuthorizedKeyDataSourceTest {
     }
 
     private void assertKey(AuthorizedKey key, String data, String comment) {
-        assertEquals("dummy", key.getType());
+        assertEquals(FakePublicKeyMatcherFactory.TYPE, key.getType());
         assertArrayEquals(BaseEncoding.base64().decode(data), key.getData());
         assertEquals(comment, key.getComment());
     }

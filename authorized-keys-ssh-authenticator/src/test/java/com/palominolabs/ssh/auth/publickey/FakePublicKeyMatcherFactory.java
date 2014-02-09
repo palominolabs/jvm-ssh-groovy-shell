@@ -5,7 +5,7 @@ import java.security.spec.InvalidKeySpecException;
 
 class FakePublicKeyMatcherFactory implements PublicKeyMatcherFactory {
 
-    static final String TYPE = "dummy";
+    static final String TYPE = "fake";
 
     @Nonnull
     @Override
