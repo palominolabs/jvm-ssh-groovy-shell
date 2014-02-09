@@ -15,3 +15,7 @@ dependencies {
   compile project(':groovy-shell-command')
   compile project(':authorized-keys-ssh-authenticator')
 }
+
+run {
+  systemProperties = System.properties
+}

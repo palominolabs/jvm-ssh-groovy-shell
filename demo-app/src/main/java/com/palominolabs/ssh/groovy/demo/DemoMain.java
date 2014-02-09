@@ -41,9 +41,6 @@ import java.util.concurrent.Executors;
 
 public final class DemoMain {
     public static void main(String[] args) throws Exception {
-        Injector injector = getInjector();
-
-        startHttpServer(injector);
 
         PublickeyAuthenticator authenticator = null;
         String authKeyProp = System.getProperty("DEMO_SSH_AUTHORIZED_KEYS");
@@ -51,6 +48,10 @@ public final class DemoMain {
 
             // user provided an authorized_keys path
             final File authorizedKeys = new File(authKeyProp);
+            if (!authorizedKeys.canRead()) {
+                System.err.println("Can't read " + authorizedKeys);
+                System.exit(1);
+            }
 
             // we want to read RSA and DSA keys
             List<PublicKeyMatcherFactory> factories =
@@ -64,6 +65,10 @@ public final class DemoMain {
             // configure the authenticator with the above
             authenticator = new AuthorizedKeysPublickeyAuthenticator(factories, dataSource, controller);
         }
+
+        Injector injector = getInjector();
+
+        startHttpServer(injector);
 
         startSshServer(injector, authenticator);
     }
