@@ -5,7 +5,12 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 mainClassName = 'com.palominolabs.ssh.groovy.demo.DemoMain'
 
 dependencies {
+  def guiceVers = '4.0-beta4'
   compile 'com.palominolabs.http:jetty-http-server-wrapper:1.0.3'
+  compile "com.google.inject:guice:${guiceVers}"
+  compile "com.google.inject.extensions:guice-assistedinject:${guiceVers}"
+  compile "com.google.inject.extensions:guice-servlet:${guiceVers}"
+
 
   runtime "ch.qos.logback:logback-classic:1.1.1"
   runtime "org.slf4j:log4j-over-slf4j:$depVersions.slf4j"
