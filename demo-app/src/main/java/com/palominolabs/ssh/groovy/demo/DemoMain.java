@@ -22,7 +22,9 @@ import com.palominolabs.ssh.auth.publickey.rsa.RsaPublicKeyMatcherFactory;
 import com.palominolabs.ssh.groovy.GroovyShellCommandFactory;
 import groovy.lang.Binding;
 import org.apache.sshd.SshServer;
+import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.server.PublickeyAuthenticator;
+import org.apache.sshd.server.UserAuth;
 import org.apache.sshd.server.auth.UserAuthNone;
 import org.apache.sshd.server.auth.UserAuthPublicKey;
 import org.apache.sshd.server.keyprovider.PEMGeneratorHostKeyProvider;
@@ -117,9 +119,9 @@ public final class DemoMain {
 
         if (authenticator == null) {
             // allow all users
-            sshd.setUserAuthFactories(ImmutableList.of(new UserAuthNone.Factory()));
+            sshd.setUserAuthFactories(ImmutableList.<NamedFactory<UserAuth>>of(new UserAuthNone.Factory()));
         } else {
-            sshd.setUserAuthFactories(ImmutableList.of(new UserAuthPublicKey.Factory()));
+            sshd.setUserAuthFactories(ImmutableList.<NamedFactory<UserAuth>>of(new UserAuthPublicKey.Factory()));
             sshd.setPublickeyAuthenticator(authenticator);
         }
 

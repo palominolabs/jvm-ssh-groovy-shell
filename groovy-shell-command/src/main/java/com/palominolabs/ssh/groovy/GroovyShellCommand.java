@@ -60,6 +60,7 @@ final class GroovyShellCommand implements Runnable, Command {
     @Override
     public void run() {
         IO io = new IO(inputStream, outputStream, errorStream);
-        exitCallback.onExit(new Groovysh(binding, io).run());
+        int exitCode = new Groovysh(binding, io).run(null);
+        exitCallback.onExit(exitCode);
     }
 }
